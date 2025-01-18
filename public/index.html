@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en-us" class="">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="xxxx xxxx">
+	<meta name="keywords" content="xxx xxx xxx xxx">
+
+	<link rel="canonical" hreflang="en-us" href="https://webdev-exam-2024-1-xxxxx.subdomain.mospolytech.ru">
+	<link rel="alternate" hreflang="x-default" href="https://webdev-exam-2024-1-xxxxx.subdomain.mospolytech.ru">
+	<link rel="alternate" hreflang="en-us" href="https://webdev-exam-2024-1-xxxxx.subdomain.mospolytech.ru">
+
+	<link rel="author" href="https://webdev-exam-2024-1-xxxxx.subdomain.mospolytech.ru/about-us.html">
+	<link rel="icon" type="image/png" sizes="16x16" href="imgs/favicons/owl-2-16.png">
+	<link rel="icon" type="image/svg+xml" href="imgs/favicons/owl-2.svg">
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="index.css">
+	<link rel="stylesheet" href="css/temp.css">
+
+	<script type="module" crossorigin src="index.js"></script>
+
+	<title>Language School</title>
+</head>
+
+<body class="">
+	<header class="">
+		<nav class="navbar p-4 bg-primary navbar-expand-sm" data-bs-theme="dark">
+			<div class="container-fluid">
+				<a class="navbar-brand d-flex gap-2 justify-content-center align-items-center" href="/">
+					<img alt="Owl" class="logo-image" src="imgs/owl-1.svg">
+					Language School
+				</a>
+
+				<div class="" id="navbar-7a72d410c5b3">
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="courses.html">Courses</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link" href="about-us.html">About Us</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link" href="contact.html">Contact</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link" href="user-account.html">User Account</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main class="container max-width-lg d-flex flex-column gap-5 px-4 py-5">
+		<div class="row">
+			<div class="col-12">
+				<div class="px-4 py-2 bg-light rounded-1">
+					Notify area
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12 ">
+				<div class="py-2">
+					<h2>School description</h2>
+					<p>Something about</p>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="d-flex flex-column gap-2">
+			<h2 class="">Learning Russian advantages</h2>
+
+			<div class="d-flex flex-column flex-sm-row gap-4">
+				<div class="col-sm">
+					<div class="">
+						<h3>First advantage</h3>
+						<p>Our first advantage is advantage with number one</p>
+					</div>
+				</div>
+
+				<div class="col-sm">
+					<div class="">
+						<h3>Second advantage</h3>
+						<p>Our second advantage is advantage after first</p>
+					</div>
+				</div>
+
+				<div class="col-sm">
+					<div class="">
+						<h3>Third advantage</h3>
+						<p>Our third advantage is exactly first although from other end</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="d-flex flex-column">
+			<h2 class="">Search courses</h2>
+
+			<form id="filter-courses-form" class="d-flex flex-column flex-sm-row gap-4">
+				<div class="flex-grow-1">
+					<label for="course-name" class="form-label">
+						Course name
+					</label>
+
+					<input type="text" id="course-name" name="name"
+						   class="form-control col-auto"
+						   placeholder="All names">
+				</div>
+
+				<div class="">
+					<label for="select-level" class="form-label">
+						Course level
+					</label>
+
+					<select id="select-level" name="level" class="form-select">
+						<option value="All">All</option>
+						<option value="Beginner">Beginner</option>
+						<option value="Intermediate">Intermediate</option>
+						<option value="Advanced">Advanced</option>
+					</select>
+				</div>
+
+				<div class="d-flex align-items-end">
+					<button type="submit" class="filter-course btn btn-primary flex-grow-1" disabled>
+						Search courses
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<div id="filtered-courses-list-block"
+			 class="align-self-center d-none flex-column gap-4 col-lg-8">
+
+			<h2 class="">Searched courses</h2>
+
+			<div id="filtered-courses-list-itself" class="list-group d-none">
+				<!-- 
+						Сюда поместим курсы, после фильтрации по параметрам в разделе Search courses, после нажатия на кнопку "Search course"
+					-->
+
+				<!-- 
+						Строки вида: 
+
+						<li class="list-group-item list-group-item-action overflow-hidden">
+							Название курса
+						</li>
+					-->
+			</div>
+
+			<div id="no-filtered-courses-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
+				No satisfactory courses found. Try to soften the criteria
+			</div>
+
+			<nav id="filtered-courses-list-pagination" class="d-none" aria-label="____">
+				<ul class="pagination justify-content-center">
+					<li class="page-item d-sm-none">
+						<a class="page-link" href="#" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+
+					<li class="page-item d-none d-sm-flex">
+						<a class="page-link" href="#">Previous </a>
+					</li>
+
+					<!-- Сюда подставим -->
+
+					<li class="page-item d-none d-sm-flex">
+						<a class="page-link" href="#">Next</a>
+					</li>
+
+					<li class="page-item d-sm-none">
+						<a class="page-link" href="#" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+		<hr>
+
+		<div class="row justify-content-center">
+			<div id="courses-list-block" class="d-flex flex-column gap-4 col-lg-8">
+				<h2 class="">All offered courses</h2>
+
+				<div id="courses-list-itself" class="list-group d-none">
+					<!-- Сюда поместим курсы, когда получим -->
+
+					<!-- 
+						Строки вида: 
+
+						<li class="list-group-item list-group-item-action overflow-hidden">
+							Название курса
+						</li>
+					-->
+				</div>
+
+				<div class="please-wait px-4 py-2 bg-light rounded-1">
+					Loading, please wait...
+				</div>
+
+				<div id="no-courses-found-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
+					No courses found. Try again later
+				</div>
+
+				<nav id="courses-list-pagination" class="d-none" aria-label="____">
+					<ul class="pagination justify-content-center">
+						<li class="page-item d-sm-none">
+							<a class="page-link" href="#" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+
+						<li class="page-item d-none d-sm-flex">
+							<a class="page-link" href="#">Previous </a>
+						</li>
+
+						<!-- Сюда подставим -->
+
+						<li class="page-item d-none d-sm-flex">
+							<a class="page-link" href="#">Next</a>
+						</li>
+
+						<li class="page-item d-sm-none">
+							<a class="page-link" href="#" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="d-flex flex-column align-self-center">
+			<h2 class="">Search for tutors</h2>
+
+			<form class="d-flex flex-column flex-sm-row gap-4">
+				<div class="">
+					<label for="select-6275a6c8f7bb" class="form-label">
+						Qualification
+					</label>
+
+					<select id="select-6275a6c8f7bb" class="form-select">
+						<option value="Any">Any</option>
+						<option value="Beginner">Beginner</option>
+						<option value="Intermediate">Intermediate</option>
+						<option value="Advanced">Advanced</option>
+					</select>
+				</div>
+
+				<div class="">
+					<label for="text-input-4ab94201da22" class="form-label">
+						Years of expirience
+					</label>
+
+					<input type="number" id="text-input-4ab94201da22"
+						   class="form-control" min="1" max="99"
+						   placeholder="Any" required>
+				</div>
+
+				<div class="d-flex align-items-end">
+					<button type="submit" class="btn btn-primary flex-grow-1">
+						Search tutor
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<hr>
+
+		<div class="row justify-content-center">
+			<div class="d-flex flex-column gap-4 col-lg-8">
+				<h2 class="">All available tutors</h2>
+
+				<ul class="list-group">
+					<li class="list-group-item">Tutor 1</li>
+					<li class="list-group-item">Tutor 2</li>
+					<li class="list-group-item">Tutor 3</li>
+				</ul>
+
+				<div class="please-wait px-4 py-2 bg-light rounded-1">
+					Loading, please wait...
+				</div>
+
+				<div id="no-tutors-found-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
+					No courses found. You need select course to watch list of tutors. Try again later
+				</div>
+
+				<div class="d-flex align-items-end">
+					<button type="submit" class="btn btn-primary">
+						Request
+					</button>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer class="p-4 bg-primary col-12" data-bs-theme="dark">
+		<span class="">
+			©&nbsp;<span>2025</span>
+
+			<span>
+				<a rel="author noopener noreferrer"
+				   class=""
+				   href="mailto:langschool@mailbox.ru">
+					<span>Language School</span>
+				</a>
+			</span>
+		</span>
+
+		<span class="">Follow us on
+			<a rel="noopener noreferrer" class="" href="#">
+				Facebook
+			</a>,
+			<a rel="noopener noreferrer" class="" href="#">
+				Twitter</a>,
+			<a rel="noopener noreferrer" class="" href="#">
+				Instagramm
+			</a>
+		</span>
+	</footer>
+</body>
+
+</html>
+
+<!-- http://cat-facts-api.std-900.ist.mospolytech.ru/api/courses -->
+<!-- api_key=667134bc-821e-4764-82b6-9949b611a421 -->

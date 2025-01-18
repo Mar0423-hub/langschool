@@ -1,0 +1,14 @@
+{
+	"name": "langschool",
+	"version": "0.0.1",
+	"scripts": {
+		"test": "echo \"When no test specified is a big error\" && exit 1"
+	},
+	"devDependencies": {
+		"eslint": "^9.18.0",
+		"htmlhint": "^1.1.4"
+	},
+	"dependencies": {
+		"bootstrap": "^5.3.3"
+	}
+}
