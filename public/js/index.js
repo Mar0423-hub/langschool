@@ -364,12 +364,21 @@ const onIndexPageContentLoaded = async () => {
 		const start = (pageNum - 1) * perPage;
 		const end = start + perPage;
 
+		// data-bs-toggle="modal" data-bs-target="#requestTutorModal"
+
 		return itemsList.slice(start, end).map(item =>
-			`<a href="#" class="list-group-item list-group-item-action overflow-hidden">
-				${item}
+			`<a href="#" data-id="${item.id}" 
+				data-bs-toggle="modal" data-bs-target="#requestTutorModal" 
+				data-bs-whatever="${item.id}"
+				class="list-group-item list-group-item-action overflow-hidden">
+
+				${item.name}
 			</a>`)
 			.join('\n');
 	};
+
+	/** ____ */
+	// const vitalizePage = (page, clickHandler) => {};
 
 
 	// Все существующие курсы с фильтрацией и без
@@ -413,7 +422,7 @@ const onIndexPageContentLoaded = async () => {
 		conceal(noFilteredCoursesBanner);
 
 		filteredCoursesListItself.innerHTML =
-			getPageMarkup(filteredCoursesList.map(course => course.name), MAX_COURSES_PER_PAGE, pageNum);
+			getPageMarkup(filteredCoursesList, MAX_COURSES_PER_PAGE, pageNum);
 	};
 
 	showCoursesList();
@@ -495,10 +504,24 @@ const onIndexPageContentLoaded = async () => {
 		conceal(noFilteredTutorsBanner);
 
 		filteredTutorsListItself.innerHTML =
-			getPageMarkup(filteredTutorsList.map(tutor => tutor.name), MAX_TUTORS_PER_PAGE, pageNum);
+			getPageMarkup(filteredTutorsList, MAX_TUTORS_PER_PAGE, pageNum);
+	};
+
+	const onTutorSelection = evt => {
+		evt.preventDefault();
+
+		const link = evt.target;
+		const id = +link?.dataset['id'];
+
+		if(!id) return;
+
+		const entity = tutorsList.find(item => +item?.id === id);
+
+		console.log(entity);
 	};
 
 	showTutorsList();
+	filteredTutorsListItself.addEventListener('click', onTutorSelection);
 	tuneTutorsPagination();
 	vitalizePager(filteredTutorsListPagination, tutorsPagesNumber, showTutorsList);
 
