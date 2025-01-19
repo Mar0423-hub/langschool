@@ -16,16 +16,15 @@
 	<link rel="icon" type="image/svg+xml" href="imgs/favicons/owl-2.svg">
 
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="index.css">
-	<link rel="stylesheet" href="css/temp.css">
+	<link rel="stylesheet" href="css/index.css">
 
-	<script type="module" crossorigin src="index.js"></script>
+	<script type="module" crossorigin src="js/index.js"></script>
 
 	<title>Language School</title>
 </head>
 
-<body class="">
-	<header class="">
+<body>
+	<header>
 		<nav class="navbar p-4 bg-primary navbar-expand-sm" data-bs-theme="dark">
 			<div class="container-fluid">
 				<a class="navbar-brand d-flex gap-2 justify-content-center align-items-center" href="/">
@@ -33,7 +32,7 @@
 					Language School
 				</a>
 
-				<div class="" id="navbar-7a72d410c5b3">
+				<div id="navbar-7a72d410c5b3">
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item">
 							<a class="nav-link" href="user-account.html">User Account</a>
@@ -46,8 +45,8 @@
 
 	<main class="container max-width-lg d-flex flex-column gap-5 px-4 py-5">
 		<div class="row">
-			<div class="col-12">
-				<div class="px-4 py-2 bg-light rounded-1">
+			<div id="notify-area" class="col-12 d-none">
+				<div class="alert alert-light px-4 py-2">
 					Notify area
 				</div>
 			</div>
@@ -65,25 +64,25 @@
 		<hr>
 
 		<div class="d-flex flex-column gap-2">
-			<h2 class="">Learning Russian advantages</h2>
+			<h2>Learning Russian advantages</h2>
 
 			<div class="d-flex flex-column flex-sm-row gap-4">
 				<div class="col-sm">
-					<div class="">
+					<div>
 						<h3>First advantage</h3>
 						<p>Our first advantage is advantage with number one</p>
 					</div>
 				</div>
 
 				<div class="col-sm">
-					<div class="">
+					<div>
 						<h3>Second advantage</h3>
 						<p>Our second advantage is advantage after first</p>
 					</div>
 				</div>
 
 				<div class="col-sm">
-					<div class="">
+					<div>
 						<h3>Third advantage</h3>
 						<p>Our third advantage is exactly first although from other end</p>
 					</div>
@@ -93,35 +92,12 @@
 
 		<hr>
 
-		<div class="row justify-content-center">
-			<div id="courses-list-block" class="d-flex flex-column gap-4 col-lg-8">
-				<h2 class="">All offered courses</h2>
+		<details class="d-flex flex-column p-2 border border-dark-subtle align-items-center">
+			<summary class="d-flex row p-0 m-0">
+				<h2 class="p-0 m-0 d-inline-block">Search courses</h2>
+			</summary>
 
-				<div id="courses-list-itself" class="list-group d-none">
-					<!-- Сюда поместим курсы, когда получим -->
-				</div>
-
-				<div class="please-wait row m-0 gap-2 px-4 py-2 bg-light rounded-1 align-items-center">
-					<div class="spinner-border text-secondary" role="status"></div>
-					Loading, please wait...
-				</div>
-
-				<div id="no-courses-found-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
-					No courses found. Try again later
-				</div>
-
-				<nav id="courses-list-pagination" class="d-none" aria-label="____">
-					<!-- Сюда подставим кнопки пагинации -->
-				</nav>
-			</div>
-		</div>
-
-		<hr>
-
-		<div class="d-flex flex-column">
-			<h2 class="">Search courses</h2>
-
-			<form id="filter-courses-form" class="d-flex flex-column flex-sm-row gap-4">
+			<form id="filter-courses-form" class="d-flex flex-column flex-sm-row gap-4 mt-4">
 				<div class="flex-grow-1">
 					<label for="course-name" class="form-label">
 						Course name
@@ -132,7 +108,7 @@
 						   placeholder="All names">
 				</div>
 
-				<div class="">
+				<div>
 					<label for="select-level" class="form-label">
 						Course level
 					</label>
@@ -151,34 +127,39 @@
 					</button>
 				</div>
 			</form>
-		</div>
+		</details>
 
 		<div id="filtered-courses-list-block"
-			 class="align-self-center d-none flex-column gap-4 col-lg-8">
+			 class="d-flex flex-column col-lg-8 align-self-center gap-4">
 
-			<h2 class="">Searched courses</h2>
+			<h2 id="filtered-courses-list-header">All offered courses</h2>
 
-			<div id="filtered-courses-list-itself" class="list-group d-none">
+			<div id="filtered-courses-list-itself" class="list-group">
 				<!-- 
 					Сюда поместим курсы, после фильтрации по параметрам в разделе 
 					Search courses, после нажатия на кнопку "Search course"
 				-->
 			</div>
 
+			<nav id="filtered-courses-list-pagination" aria-label="____">
+				<!-- Сюда подставим кнопки пагинации -->
+			</nav>
+
 			<div id="no-filtered-courses-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
 				No satisfactory courses found. Try to soften the criteria
 			</div>
 
-			<nav id="filtered-courses-list-pagination" class="d-none" aria-label="____">
-				<!-- Сюда подставим кнопки пагинации -->
-			</nav>
+			<div class="please-wait row m-0 gap-2 px-4 py-2 bg-light rounded-1 align-items-center">
+				<div class="spinner-border text-secondary" role="status"></div>
+				Loading, please wait...
+			</div>
 		</div>
 
 		<hr>
 
-		<div class="row justify-content-center">
+		<div class="row justify-content-center d-none">
 			<div id="all-tutors-list-block" class="d-flex flex-column gap-4 col-lg-8">
-				<h2 class="">All available tutors</h2>
+				<h2>All available tutors</h2>
 
 				<div id="all-tutors-list-itself" class="list-group d-none">
 					<!-- Сюда поместим курсы, когда получим -->
@@ -206,13 +187,15 @@
 			</div>
 		</div>
 
-		<hr>
+		<!-- <hr> -->
 
-		<div class="d-flex flex-column align-self-center">
-			<h2 class="">Search for tutors</h2>
+		<details class="d-flex flex-column p-2 border border-dark-subtle align-items-center">
+			<summary class="d-flex row p-0 m-0">
+				<h2 class="p-0 m-0 d-inline-block">Searched tutors</h2>
+			</summary>
 
 			<form id="filter-tutors-form" class="d-flex flex-column flex-sm-row gap-4">
-				<div class="">
+				<div>
 					<label for="select-6275a6c8f7bb" class="form-label">
 						Qualification
 					</label>
@@ -225,7 +208,7 @@
 					</select>
 				</div>
 
-				<div class="">
+				<div>
 					<label for="text-input-4ab94201da22" class="form-label">
 						Years of expirience
 					</label>
@@ -241,12 +224,12 @@
 					</button>
 				</div>
 			</form>
-		</div>
+		</details>
 
 		<div id="filtered-tutors-list-block"
-			 class="align-self-center d-none flex-column gap-4 col-lg-8">
+			 class="d-flex align-self-center flex-column gap-4 col-lg-8">
 
-			<h2 class="">Searched tutors</h2>
+			<h2 id="filtered-tutors-list-header">All available tutors</h2>
 
 			<div id="filtered-tutors-list-itself" class="list-group d-none">
 				<!-- 
@@ -255,36 +238,41 @@
 				-->
 			</div>
 
+			<nav id="filtered-tutors-list-pagination" class="d-none" aria-label="____">
+				<!-- Сюда подставим кнопки пагинации -->
+			</nav>
+
 			<div id="no-filtered-tutors-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
 				No satisfactory tutors found. Try to soften the criteria
 			</div>
 
-			<nav id="filtered-tutors-list-pagination" class="d-none" aria-label="____">
-				<!-- Сюда подставим кнопки пагинации -->
-			</nav>
+			<div class="please-wait row m-0 gap-2 px-4 py-2 bg-light rounded-1 align-items-center">
+				<div class="spinner-border text-secondary" role="status"></div>
+				Loading, please wait...
+			</div>
 		</div>
 	</main>
 
 	<footer class="p-4 bg-primary col-12" data-bs-theme="dark">
-		<span class="">
+		<span>
 			©&nbsp;<span>2025</span>
 
 			<span>
 				<a rel="author noopener noreferrer"
-				   class=""
+
 				   href="mailto:langschool@mailbox.ru">
 					<span>Language School</span>
 				</a>
 			</span>
 		</span>
 
-		<span class="">Follow us on
-			<a rel="noopener noreferrer" class="" href="#">
+		<span>Follow us on
+			<a rel="noopener noreferrer" href="#">
 				Facebook
 			</a>,
-			<a rel="noopener noreferrer" class="" href="#">
+			<a rel="noopener noreferrer" href="#">
 				Twitter</a>,
-			<a rel="noopener noreferrer" class="" href="#">
+			<a rel="noopener noreferrer" href="#">
 				Instagramm
 			</a>
 		</span>
