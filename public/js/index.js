@@ -16,13 +16,13 @@ const onIndexPageContentLoaded = async () => {
 
 	// let coursesList = [];
 	// try {
-	// const coursesResponse = await fetch(apiBase + 'courses' + apiKeyPostfix);
+	//	const coursesResponse = await fetch(apiBase + 'courses' + apiKeyPostfix);
 	// 	coursesList = await coursesResponse.json();
 	// } catch (err) { /* Считаем, нет курсов */ }
 
 	// let tutorsList = [];
 	// try {
-	// const tutorsResponse = await fetch(apiBase + 'tutors' + apiKeyPostfix);
+	//	const tutorsResponse = await fetch(apiBase + 'tutors' + apiKeyPostfix);
 	// 	tutorsList = await tutorsResponse.json();
 	// } catch (err) { /* Считаем, нет репетиторов */ }
 
@@ -248,20 +248,33 @@ const onIndexPageContentLoaded = async () => {
 		elements.forEach(element => element?.classList.add('d-none'));
 
 	/** Переключение цифровых кнопок "пейджера" */
-	const vitalizePager = pager => {
+	const vitalizePager = (pager, latest, switcher) => {
 		const onClick = evt => {
 			evt.preventDefault();
 
 			const target = evt.target;
-			const index = target.dataset['index']
+			const index = target.dataset['index'];
 
 			if (index) {
-				const numbered = [...pager.querySelector('ul').children];
+				const numbered = [...pager.querySelector('ul').children]
+					.map(li => li?.children[0]);
 
-				numbered.forEach(button =>
-					button?.children[0]?.classList.remove('active'));
+				const current = numbered.find(anchor =>
+					anchor?.classList.contains('active'));
 
+				const currentID = current?.dataset['index'];
+
+				if (currentID === index) return;
+				if ((currentID === 1) && (index === 'previous')) return;
+				if ((currentID === latest) && (index === 'next')) return;
+
+				// TODO Добавить обработку next и previous
+				if ((index === 'next') || (index === 'previous')) return;
+
+				numbered.forEach(link => link?.classList.remove('active'));
 				target.classList.add('active');
+
+				if (switcher) switcher(index);
 			}
 		};
 
@@ -291,21 +304,23 @@ const onIndexPageContentLoaded = async () => {
 
 		// Если набралось только на одну страницу, отключаем кнопки вперёд/назад
 		const disabled = pagesNumber > 1 ? '' : 'disabled';
-		// Можно обойтись
-		// const tabindexNegative= disabled ? 'tabindex = -1' : '';
 
 		const markup =
 			`
 				<ul ${di} class="pagination justify-content-center">
 					<li class="page-item d-sm-none">
-						<a class="page-link ${disabled}" href="#" aria-label="Previous" 
-						aria-disabled="${!!disabled}">
+						<a class="page-link ${disabled}" href="#" data-index="previous"
+							aria-label="Previous" 
+							aria-disabled="${!!disabled}">
+
 							<span aria-hidden="true">&laquo;</span>
 						</a>
 					</li>
 
 					<li class="page-item d-none d-sm-flex">
-						<a class="page-link ${disabled}" href="#" aria-disabled="${!!disabled}">
+						<a class="page-link ${disabled}" href="#" data-index="previous"
+							aria-disabled="${!!disabled}">
+
 							Previous
 						</a>
 					</li>
@@ -313,14 +328,18 @@ const onIndexPageContentLoaded = async () => {
 					${paginationInner}
 
 					<li class="page-item d-none d-sm-flex">
-						<a class="page-link ${disabled}" href="#" aria-disabled="${!!disabled}">
+						<a class="page-link ${disabled}" href="#" data-index="next"
+							aria-disabled="${!!disabled}">
+
 							Next
 						</a>
 					</li>
 
 					<li class="page-item d-sm-none">
-						<a class="page-link ${disabled}" href="#" aria-label="Next"
-						aria-disabled="${!!disabled}">
+						<a class="page-link ${disabled}" href="#" data-index="next"
+							aria-label="Next"
+							aria-disabled="${!!disabled}">
+
 							<span aria-hidden="true">&raquo;</span>
 						</a>
 					</li>
@@ -362,22 +381,13 @@ const onIndexPageContentLoaded = async () => {
 
 	filteredCoursesListBlock?.querySelector('.please-wait')?.remove();
 
-	vitalizePager(filteredCoursesListPagination);
-
 	let filteredCoursesList = [...coursesList];
 
-	const showCoursesList = () => {
-		reveal(filteredCoursesListItself);
-		conceal(noFilteredCoursesBanner);
+	const pagesNumber =
+		numberOfPages(filteredCoursesList.length, MAX_COURSES_PER_PAGE);
 
-		filteredCoursesListItself.innerHTML =
-			getPageMarkup(filteredCoursesList.map(course => course.name), MAX_COURSES_PER_PAGE);
-
-		// Настраиваем пагинацию
-
-		const pagesNumber =
-			numberOfPages(filteredCoursesList.length, MAX_COURSES_PER_PAGE);
-
+	// Настраиваем пагинацию
+	const tuneCoursesPagination = () => {
 		if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
 			reveal(filteredCoursesListPagination);
 
@@ -388,7 +398,17 @@ const onIndexPageContentLoaded = async () => {
 			?.classList.add('active');
 	};
 
+	const showCoursesList = (pageNum = 1) => {
+		reveal(filteredCoursesListItself);
+		conceal(noFilteredCoursesBanner);
+
+		filteredCoursesListItself.innerHTML =
+			getPageMarkup(filteredCoursesList.map(course => course.name), MAX_COURSES_PER_PAGE, pageNum);
+	};
+
 	showCoursesList();
+	tuneCoursesPagination();
+	vitalizePager(filteredCoursesListPagination, pagesNumber, showCoursesList);
 
 	// Обработчик нажатия на Search
 
@@ -413,6 +433,7 @@ const onIndexPageContentLoaded = async () => {
 		if (filteredCoursesList.length) {
 			filteredCoursesListHeader.innerHTML = 'Searched courses';
 			showCoursesList();
+			tuneCoursesPagination();
 		}
 	}
 
@@ -442,23 +463,14 @@ const onIndexPageContentLoaded = async () => {
 
 	filteredTutorsListBlock?.querySelector('.please-wait')?.remove();
 
-	vitalizePager(filteredTutorsListPagination);
-
 	let filteredTutorsList = [...tutorsList];
 
-	const showTutorsList = () => {
-		reveal(filteredTutorsListItself);
-		conceal(noFilteredTutorsBanner);
+	const tutorsPagesNumber =
+		numberOfPages(filteredTutorsList.length, MAX_TUTORS_PER_PAGE);
 
-		filteredTutorsListItself.innerHTML =
-			getPageMarkup(filteredTutorsList.map(tutor => tutor.name), MAX_TUTORS_PER_PAGE);
-
-		// Настраиваем пагинацию
-
-		const pagesNumber =
-			numberOfPages(filteredTutorsList.length, MAX_TUTORS_PER_PAGE);
-
-		if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
+	// Настраиваем пагинацию
+	const tuneTutorsPagination = () => {
+		if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (tutorsPagesNumber !== 1))
 			reveal(filteredTutorsListPagination);
 
 		filteredTutorsListPagination.innerHTML =
@@ -468,7 +480,17 @@ const onIndexPageContentLoaded = async () => {
 			?.classList.add('active');
 	};
 
+	const showTutorsList = (pageNum = 1) => {
+		reveal(filteredTutorsListItself);
+		conceal(noFilteredTutorsBanner);
+
+		filteredTutorsListItself.innerHTML =
+			getPageMarkup(filteredTutorsList.map(tutor => tutor.name), MAX_TUTORS_PER_PAGE, pageNum);
+	};
+
 	showTutorsList();
+	tuneTutorsPagination();
+	vitalizePager(filteredTutorsListPagination, tutorsPagesNumber, showTutorsList);
 
 	// Обработчик нажатия на Search
 
@@ -493,6 +515,7 @@ const onIndexPageContentLoaded = async () => {
 		if (filteredTutorsList.length) {
 			filteredTutorsListHeader.innerHTML = 'Searched tutors';
 			showTutorsList();
+			tuneTutorsPagination();
 		}
 	}
 
