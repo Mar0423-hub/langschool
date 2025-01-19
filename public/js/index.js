@@ -259,21 +259,31 @@ const onIndexPageContentLoaded = async () => {
 				const numbered = [...pager.querySelector('ul').children]
 					.map(li => li?.children[0]);
 
-				const current = numbered.find(anchor =>
-					anchor?.classList.contains('active'));
+				const current = numbered.find(link =>
+					link?.classList.contains('active'));
 
-				const currentID = current?.dataset['index'];
+				const currentID = +current?.dataset['index'];
 
-				if (currentID === index) return;
+				if (currentID === +index) return;
 				if ((currentID === 1) && (index === 'previous')) return;
 				if ((currentID === latest) && (index === 'next')) return;
 
-				// TODO Добавить обработку next и previous
-				if ((index === 'next') || (index === 'previous')) return;
-
 				numbered.forEach(link => link?.classList.remove('active'));
-				target.classList.add('active');
 
+				// TODO Добавить обработку next и previous
+				if ((index === 'next') || (index === 'previous')) {
+					const nextID = index === 'next' ? currentID + 1 : currentID - 1;
+
+					const newActiveIndex =
+						numbered.findIndex(link => +link?.dataset['index'] === nextID);
+
+					numbered[newActiveIndex]?.classList.add('active');
+
+					if (switcher) switcher(nextID);
+					return;
+				};
+
+				target.classList.add('active');
 				if (switcher) switcher(index);
 			}
 		};
