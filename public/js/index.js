@@ -1,18 +1,19 @@
 
+/** Скрывать "пейджер" если всё уместилось на одной странице */
+const TURN_OFF_PAGER_FOR_ONE_PAGE = false;
+// const TURN_OFF_PAGER_FOR_ONE_PAGE = true;
+
+const MAX_COURSES_PER_PAGE = 10;
+// const MAX_COURSES_PER_PAGE = 2;
+const MAX_TUTORS_PER_PAGE = 10;
+// const MAX_TUTORS_PER_PAGE = 2;
+
+const apiBase = 'http://cat-facts-api.std-900.ist.mospolytech.ru/api/';
+const apiKeyPostfix = '?api_key=667134bc-821e-4764-82b6-9949b611a421';
+
+
 // Дожидаемся загрузки страницы, перед тем как что-то делать
 const onIndexPageContentLoaded = async () => {
-
-	/** Скрывать "пейджер" если всё уместилось на одной странице */
-	const TURN_OFF_PAGER_FOR_ONE_PAGE = false;
-	// const TURN_OFF_PAGER_FOR_ONE_PAGE = true;
-
-	// const MAX_COURSES_PER_PAGE = 10;
-	const MAX_COURSES_PER_PAGE = 2;
-	// const MAX_TUTORS_PER_PAGE = 10;
-	const MAX_TUTORS_PER_PAGE = 2;
-
-	const apiBase = 'http://cat-facts-api.std-900.ist.mospolytech.ru/api/';
-	const apiKeyPostfix = '?api_key=667134bc-821e-4764-82b6-9949b611a421';
 
 	// let coursesList = [];
 	// try {
@@ -270,7 +271,6 @@ const onIndexPageContentLoaded = async () => {
 
 				numbered.forEach(link => link?.classList.remove('active'));
 
-				// TODO Добавить обработку next и previous
 				if ((index === 'next') || (index === 'previous')) {
 					const nextID = index === 'next' ? currentID + 1 : currentID - 1;
 
