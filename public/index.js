@@ -1,26 +1,37 @@
 
+// Дожидаемся загрузки страницы, перед тем как что-то делать
 const onIndexPageContentLoaded = async () => {
 
 	/** Скрывать "пейджер" если всё уместилось на одной странице */
 	const TURN_OFF_PAGER_FOR_ONE_PAGE = false;
+	// const TURN_OFF_PAGER_FOR_ONE_PAGE = true;
 	// 
 	const MAX_COURSES_PER_PAGE = 10;
+	const MAX_FILTERED_COURSES_PER_PAGE = 10;
+	const MAX_TUTORS_PER_PAGE = 10;
 	// const MAX_COURSES_PER_PAGE = 2;
 	// const MAX_FILTERED_COURSES_PER_PAGE = 2;
-	const MAX_FILTERED_COURSES_PER_PAGE = 10;
 
 	const apiBase = 'http://cat-facts-api.std-900.ist.mospolytech.ru/api/';
 	const apiKeyPostfix = '?api_key=667134bc-821e-4764-82b6-9949b611a421';
 
-	const coursesResponse = await fetch(apiBase + 'courses' + apiKeyPostfix);
+	// const coursesResponse = await fetch(apiBase + 'courses' + apiKeyPostfix);
 
-	let _coursesList = [];
-	try {
-		_coursesList = await coursesResponse.json();
-	} catch (err) { /* Считаем, нет курсов */ }
+	// let __coursesList = [];
+	// try {
+	// 	__coursesList = await coursesResponse.json();
+	// } catch (err) { /* Считаем, нет курсов */ }
 
-		// Заглушка для дебага
-	const __oursesList = [
+	// 
+	// const tutorsResponse = await fetch(apiBase + 'tutors' + apiKeyPostfix);
+
+	// let __tutorsList = [];
+	// try {
+	// 	__tutorsList = await tutorsResponse.json();
+	// } catch (err) { /* Считаем, нет репетиторов */ }
+
+	// Заглушка для дебага
+	const _coursesList = [
 		{
 			"id": 1,
 			"name": "Introduction to Russian language",
@@ -232,12 +243,14 @@ const onIndexPageContentLoaded = async () => {
 		},
 	];
 
+	/** Показываем элементы */
 	const reveal = (...elements) =>
 		elements.forEach(element => element?.classList.remove('d-none'));
-
+	/** Прячем элементы */
 	const conceal = (...elements) =>
 		elements.forEach(element => element?.classList.add('d-none'));
 
+	// Переключение цифровых кнопок "пейджера"
 	const vitalizePager = pager => {
 		const onClick = evt => {
 			evt.preventDefault();
@@ -313,6 +326,8 @@ const onIndexPageContentLoaded = async () => {
 		return markup;
 	};
 
+	// Все существующие курсы
+
 	const coursesListBlock = document.getElementById('courses-list-block');
 	const coursesListItself = coursesListBlock?.querySelector('#courses-list-itself');
 
@@ -338,7 +353,9 @@ const onIndexPageContentLoaded = async () => {
 
 		// Настраиваем пагинацию
 
-		if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (coursesListPagesNumber !== 1))
+		const pagesNumber = Math.floor(_coursesList.length, MAX_COURSES_PER_PAGE) + 1;
+
+		if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
 			coursesListPagination?.classList.remove('d-none');
 
 		coursesListPagination.innerHTML =
@@ -348,9 +365,10 @@ const onIndexPageContentLoaded = async () => {
 			?.classList.add('active');
 	}
 
+	// Только те репетиторы (имена), которые найдены во всех курсах
 	const teachersOfCourseses = [...new Set(_coursesList.map(course => course.teacher))];
 
-	// filter-courses
+	// Что касается фильтрации курсов
 
 	const filteredCoursesListBlock =
 		document.getElementById('filtered-courses-list-block');
@@ -365,6 +383,8 @@ const onIndexPageContentLoaded = async () => {
 		?.querySelector('#filtered-courses-list-pagination');
 
 	vitalizePager(filteredCoursesListPagination);
+
+	// Обработчик нажатия на Search
 
 	const onFilterCoursesFormSubmit = evt => {
 		evt.preventDefault();
@@ -395,9 +415,13 @@ const onIndexPageContentLoaded = async () => {
 				</a>`)
 				.join('\n');
 
-			// filteredCoursesListItself.firstChild.classList.add('active');
-
 			// Настраиваем пагинацию
+
+			const pagesNumber =
+				Math.floor(filteredCoursesList.length, MAX_FILTERED_COURSES_PER_PAGE) + 1;
+
+			if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
+				coursesListPagination?.classList.remove('d-none');
 
 			filteredCoursesListPagination.innerHTML =
 				paginationTemplate(filteredCoursesList.length, MAX_FILTERED_COURSES_PER_PAGE);
@@ -405,23 +429,135 @@ const onIndexPageContentLoaded = async () => {
 			filteredCoursesListPagination.querySelector('[data-index="1"]')
 				?.classList.add('active');
 		}
-
-
 	}
 
 	const filterCoursesForm = document.getElementById('filter-courses-form');
+	// Делаем кнопку доступной
 	filterCoursesForm?.querySelector('.filter-course')?.removeAttribute('disabled');
-	filterCoursesForm.addEventListener('submit', onFilterCoursesFormSubmit)
+	// Ставим обработчик отправки формы
+	filterCoursesForm.addEventListener('submit', onFilterCoursesFormSubmit);
 
 
+	// Что касается раздела "All available tutors"
+
+	const allTutorsListBlock =
+		document.getElementById('all-tutors-list-block');
+
+	const allTutorsListItself = allTutorsListBlock
+		?.querySelector('#all-tutors-list-itself');
+
+	const noTutorsBanner = allTutorsListBlock
+		?.querySelector('#no-tutors-found-banner');
+
+	const allTutorsListPagination = allTutorsListBlock
+		?.querySelector('#all-tutors--list-pagination');
+
+	vitalizePager(allTutorsListPagination);
+	allTutorsListBlock?.querySelector('.please-wait')?.remove();
+
+	if (!_tutorsList.length) {
+		reveal(noTutorsBanner);
+		conceal(allTutorsListItself, allTutorsListPagination);
+	}
+
+	if (_tutorsList?.length) {
+		conceal(noTutorsBanner);
+		reveal(allTutorsListItself);
+
+		allTutorsListItself.innerHTML = _tutorsList.map(tutorItem =>
+			`<a href="#" class="list-group-item list-group-item-action overflow-hidden">
+				${tutorItem.name}
+			</a>`)
+			.join('\n');
+
+		// Настраиваем пагинацию
+
+		const pagesNumber = Math.floor(_tutorsList.length, MAX_TUTORS_PER_PAGE) + 1;
+
+		if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
+			reveal(allTutorsListPagination);
+
+		allTutorsListPagination.innerHTML =
+			paginationTemplate(_tutorsList.length, MAX_TUTORS_PER_PAGE);
+
+		allTutorsListPagination.querySelector('[data-index="1"]')
+			?.classList.add('active');
+	}
 
 
+	// Что касается фильтрации репетиторов
 
+	const filteredTutorsListBlock =
+		document.getElementById('filtered-tutors-list-block');
 
+	const filteredTutorsListItself = filteredTutorsListBlock
+		?.querySelector('#filtered-tutors-list-itself');
 
+	const noFilteredTutorsBanner = filteredTutorsListBlock
+		?.querySelector('#no-filtered-tutors-banner');
 
+	const filteredTutorsListPagination = filteredTutorsListBlock
+		?.querySelector('#filtered-tutors-list-pagination');
+
+	vitalizePager(filteredTutorsListPagination);
+
+	// Обработчик нажатия на Search
+
+	const onFilterTutorsFormSubmit = evt => {
+		evt.preventDefault();
+
+		const form = evt?.target;
+		const expa = +form?.expa.value || 0;
+		const level = form?.level.value || '';
+
+		console.log(expa, level);
+
+		const filteredTutorsList = _tutorsList
+			.filter(tutor => tutor.work_experience >= expa)
+			.filter(tutor => level === 'Any' || level === tutor.language_level);
+
+		reveal(filteredTutorsListBlock);
+		filteredTutorsListBlock?.classList.add('d-flex');
+
+		if (!filteredTutorsList.length) {
+			conceal(filteredTutorsListItself, filteredTutorsListPagination);
+			reveal(noFilteredTutorsBanner);
+		}
+
+		if (filteredTutorsList.length) {
+			reveal(filteredTutorsListItself, filteredTutorsListPagination);
+			conceal(noFilteredTutorsBanner);
+
+			filteredTutorsListItself.innerHTML = filteredTutorsList.map(tutor =>
+				`<a href="#" class="list-group-item list-group-item-action overflow-hidden">
+					${tutor.name}
+				</a>`)
+				.join('\n');
+
+			// Настраиваем пагинацию
+
+			const pagesNumber =
+				Math.floor(filteredTutorsList.length, MAX_FILTERED_COURSES_PER_PAGE) + 1;
+
+			if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
+				filteredTutorsListPagination?.classList.remove('d-none');
+
+			filteredTutorsListPagination.innerHTML =
+				paginationTemplate(filteredTutorsList.length, MAX_FILTERED_COURSES_PER_PAGE);
+
+			filteredTutorsListPagination.querySelector('[data-index="1"]')
+				?.classList.add('active');
+		}
+	}
+
+	const filterTutorsForm = document.getElementById('filter-tutors-form');
+	// Делаем кнопку доступной
+	filterTutorsForm?.querySelector('.filter-tutor')?.removeAttribute('disabled');
+	// Ставим обработчик отправки формы
+	filterTutorsForm.addEventListener('submit', onFilterTutorsFormSubmit);
 
 
 };
 
+// Дожидаемся загрузки страницы, перед тем как что-то делать
 document.addEventListener('DOMContentLoaded', onIndexPageContentLoaded);

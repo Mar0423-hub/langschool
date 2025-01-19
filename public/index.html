@@ -249,13 +249,13 @@
 		<div class="d-flex flex-column align-self-center">
 			<h2 class="">Search for tutors</h2>
 
-			<form class="d-flex flex-column flex-sm-row gap-4">
+			<form id="filter-tutors-form" class="d-flex flex-column flex-sm-row gap-4">
 				<div class="">
 					<label for="select-6275a6c8f7bb" class="form-label">
 						Qualification
 					</label>
 
-					<select id="select-6275a6c8f7bb" class="form-select">
+					<select id="select-6275a6c8f7bb" name="level" class="form-select">
 						<option value="Any">Any</option>
 						<option value="Beginner">Beginner</option>
 						<option value="Intermediate">Intermediate</option>
@@ -268,30 +268,91 @@
 						Years of expirience
 					</label>
 
-					<input type="number" id="text-input-4ab94201da22"
+					<input type="number" id="text-input-4ab94201da22" name="expa"
 						   class="form-control" min="1" max="99"
 						   placeholder="Any" required>
 				</div>
 
 				<div class="d-flex align-items-end">
-					<button type="submit" class="btn btn-primary flex-grow-1">
+					<button type="submit" class="filter-tutor btn btn-primary flex-grow-1" disabled>
 						Search tutor
 					</button>
 				</div>
 			</form>
 		</div>
 
+		<div id="filtered-tutors-list-block"
+			 class="align-self-center d-none flex-column gap-4 col-lg-8">
+
+			<h2 class="">Searched tutors</h2>
+
+			<div id="filtered-tutors-list-itself" class="list-group d-none">
+				<!-- 
+				   Сюда поместим репетиторов, после фильтрации по параметрам в 
+				   разделе Search tutors, после нажатия на кнопку "Search tutor"
+				-->
+
+				<!-- 
+				   Строки вида: 
+
+				   <li class="list-group-item list-group-item-action overflow-hidden">
+					   данные репетитора
+				   </li>
+				-->
+			</div>
+
+			<div id="no-filtered-tutors-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
+				No satisfactory tutors found. Try to soften the criteria
+			</div>
+
+			<nav id="filtered-tutors-list-pagination" class="d-none" aria-label="____">
+				<!-- Сюда подставим -->
+			</nav>
+		</div>
+
 		<hr>
 
 		<div class="row justify-content-center">
-			<div class="d-flex flex-column gap-4 col-lg-8">
+			<div id="all-tutors-list-block" class="d-flex flex-column gap-4 col-lg-8">
 				<h2 class="">All available tutors</h2>
 
-				<ul class="list-group">
-					<li class="list-group-item">Tutor 1</li>
-					<li class="list-group-item">Tutor 2</li>
-					<li class="list-group-item">Tutor 3</li>
-				</ul>
+				<div id="all-tutors-list-itself" class="list-group d-none">
+					<!-- Сюда поместим курсы, когда получим -->
+
+					<!-- 
+						Строки вида: 
+
+						<li class="list-group-item list-group-item-action overflow-hidden">
+							Название курса
+						</li>
+					-->
+				</div>
+
+				<nav id="all-tutors--list-pagination" class="d-none" aria-label="____">
+					<ul class="pagination justify-content-center">
+						<li class="page-item d-sm-none">
+							<a class="page-link" href="#" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+							</a>
+						</li>
+
+						<li class="page-item d-none d-sm-flex">
+							<a class="page-link" href="#">Previous </a>
+						</li>
+
+						<!-- Сюда подставим -->
+
+						<li class="page-item d-none d-sm-flex">
+							<a class="page-link" href="#">Next</a>
+						</li>
+
+						<li class="page-item d-sm-none">
+							<a class="page-link" href="#" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
 
 				<div class="please-wait px-4 py-2 bg-light rounded-1">
 					Loading, please wait...
@@ -301,11 +362,12 @@
 					No courses found. You need select course to watch list of tutors. Try again later
 				</div>
 
-				<div class="d-flex align-items-end">
-					<button type="submit" class="btn btn-primary">
-						Request
-					</button>
-				</div>
+				<!-- <div id="_request-button" class="d-flex align-items-end"> -->
+				<button type="button" id="request-button"
+						class="btn btn-primary col-4 align-self-center">
+					Request
+				</button>
+				<!-- </div> -->
 			</div>
 		</div>
 	</main>
