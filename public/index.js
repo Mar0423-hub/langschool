@@ -334,14 +334,17 @@ const onIndexPageContentLoaded = async () => {
 	const coursesListPagination = coursesListBlock
 		?.querySelector('#courses-list-pagination');
 
+	const noCoursesFoundBanner =
+		coursesListBlock?.querySelector('#no-courses-found-banner');
+
 	coursesListBlock?.querySelector('.please-wait')?.remove();
 
 	if (!_coursesList.length)
-		coursesListBlock?.querySelector('#no-courses-found-banner')
-			?.classList.remove('d-none');
+		reveal(noCoursesFoundBanner);
 
 	if (_coursesList?.length) {
-		coursesListItself?.classList.remove('d-none');
+		conceal(noCoursesFoundBanner);
+		reveal(coursesListItself);
 
 		coursesListItself.innerHTML = _coursesList.map(courseItem =>
 			`<a href="#" class="list-group-item list-group-item-action overflow-hidden">
@@ -349,14 +352,12 @@ const onIndexPageContentLoaded = async () => {
 			</a>`)
 			.join('\n');
 
-		// coursesListItself.firstChild.classList.add('active');
-
 		// Настраиваем пагинацию
 
 		const pagesNumber = Math.floor(_coursesList.length, MAX_COURSES_PER_PAGE) + 1;
 
 		if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
-			coursesListPagination?.classList.remove('d-none');
+			reveal(coursesListPagination);
 
 		coursesListPagination.innerHTML =
 			paginationTemplate(_coursesList.length, MAX_COURSES_PER_PAGE);
@@ -406,7 +407,7 @@ const onIndexPageContentLoaded = async () => {
 		}
 
 		if (filteredCoursesList.length) {
-			reveal(filteredCoursesListItself, filteredCoursesListPagination);
+			reveal(filteredCoursesListItself);
 			conceal(noFilteredCoursesBanner);
 
 			filteredCoursesListItself.innerHTML = filteredCoursesList.map(courseItem =>
@@ -421,7 +422,7 @@ const onIndexPageContentLoaded = async () => {
 				Math.floor(filteredCoursesList.length, MAX_FILTERED_COURSES_PER_PAGE) + 1;
 
 			if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
-				coursesListPagination?.classList.remove('d-none');
+				reveal(filteredCoursesListPagination);
 
 			filteredCoursesListPagination.innerHTML =
 				paginationTemplate(filteredCoursesList.length, MAX_FILTERED_COURSES_PER_PAGE);
@@ -510,8 +511,6 @@ const onIndexPageContentLoaded = async () => {
 		const expa = +form?.expa.value || 0;
 		const level = form?.level.value || '';
 
-		console.log(expa, level);
-
 		const filteredTutorsList = _tutorsList
 			.filter(tutor => tutor.work_experience >= expa)
 			.filter(tutor => level === 'Any' || level === tutor.language_level);
@@ -525,7 +524,7 @@ const onIndexPageContentLoaded = async () => {
 		}
 
 		if (filteredTutorsList.length) {
-			reveal(filteredTutorsListItself, filteredTutorsListPagination);
+			reveal(filteredTutorsListItself);
 			conceal(noFilteredTutorsBanner);
 
 			filteredTutorsListItself.innerHTML = filteredTutorsList.map(tutor =>
@@ -540,7 +539,7 @@ const onIndexPageContentLoaded = async () => {
 				Math.floor(filteredTutorsList.length, MAX_FILTERED_COURSES_PER_PAGE) + 1;
 
 			if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
-				filteredTutorsListPagination?.classList.remove('d-none');
+				reveal(filteredTutorsListPagination);
 
 			filteredTutorsListPagination.innerHTML =
 				paginationTemplate(filteredTutorsList.length, MAX_FILTERED_COURSES_PER_PAGE);

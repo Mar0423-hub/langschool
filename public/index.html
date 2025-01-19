@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en-us" class="">
+<html lang="en-us">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="xxxx xxxx">
-	<meta name="keywords" content="xxx xxx xxx xxx">
+	<meta name="description" content="description">
+	<meta name="keywords" content="key words">
 
 	<link rel="canonical" hreflang="en-us" href="https://webdev-exam-2024-1-xxxxx.subdomain.mospolytech.ru">
 	<link rel="alternate" hreflang="x-default" href="https://webdev-exam-2024-1-xxxxx.subdomain.mospolytech.ru">
@@ -35,18 +35,6 @@
 
 				<div class="" id="navbar-7a72d410c5b3">
 					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="courses.html">Courses</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link" href="about-us.html">About Us</a>
-						</li>
-
-						<li class="nav-item">
-							<a class="nav-link" href="contact.html">Contact</a>
-						</li>
-
 						<li class="nav-item">
 							<a class="nav-link" href="user-account.html">User Account</a>
 						</li>
@@ -105,6 +93,31 @@
 
 		<hr>
 
+		<div class="row justify-content-center">
+			<div id="courses-list-block" class="d-flex flex-column gap-4 col-lg-8">
+				<h2 class="">All offered courses</h2>
+
+				<div id="courses-list-itself" class="list-group d-none">
+					<!-- Сюда поместим курсы, когда получим -->
+				</div>
+
+				<div class="please-wait row m-0 gap-2 px-4 py-2 bg-light rounded-1 align-items-center">
+					<div class="spinner-border text-secondary" role="status"></div>
+					Loading, please wait...
+				</div>
+
+				<div id="no-courses-found-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
+					No courses found. Try again later
+				</div>
+
+				<nav id="courses-list-pagination" class="d-none" aria-label="____">
+					<!-- Сюда подставим кнопки пагинации -->
+				</nav>
+			</div>
+		</div>
+
+		<hr>
+
 		<div class="d-flex flex-column">
 			<h2 class="">Search courses</h2>
 
@@ -147,16 +160,9 @@
 
 			<div id="filtered-courses-list-itself" class="list-group d-none">
 				<!-- 
-						Сюда поместим курсы, после фильтрации по параметрам в разделе Search courses, после нажатия на кнопку "Search course"
-					-->
-
-				<!-- 
-						Строки вида: 
-
-						<li class="list-group-item list-group-item-action overflow-hidden">
-							Название курса
-						</li>
-					-->
+					Сюда поместим курсы, после фильтрации по параметрам в разделе 
+					Search courses, после нажатия на кнопку "Search course"
+				-->
 			</div>
 
 			<div id="no-filtered-courses-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
@@ -164,83 +170,39 @@
 			</div>
 
 			<nav id="filtered-courses-list-pagination" class="d-none" aria-label="____">
-				<ul class="pagination justify-content-center">
-					<li class="page-item d-sm-none">
-						<a class="page-link" href="#" aria-label="Previous">
-							<span aria-hidden="true">&laquo;</span>
-						</a>
-					</li>
-
-					<li class="page-item d-none d-sm-flex">
-						<a class="page-link" href="#">Previous </a>
-					</li>
-
-					<!-- Сюда подставим -->
-
-					<li class="page-item d-none d-sm-flex">
-						<a class="page-link" href="#">Next</a>
-					</li>
-
-					<li class="page-item d-sm-none">
-						<a class="page-link" href="#" aria-label="Next">
-							<span aria-hidden="true">&raquo;</span>
-						</a>
-					</li>
-				</ul>
+				<!-- Сюда подставим кнопки пагинации -->
 			</nav>
 		</div>
 
 		<hr>
 
 		<div class="row justify-content-center">
-			<div id="courses-list-block" class="d-flex flex-column gap-4 col-lg-8">
-				<h2 class="">All offered courses</h2>
+			<div id="all-tutors-list-block" class="d-flex flex-column gap-4 col-lg-8">
+				<h2 class="">All available tutors</h2>
 
-				<div id="courses-list-itself" class="list-group d-none">
+				<div id="all-tutors-list-itself" class="list-group d-none">
 					<!-- Сюда поместим курсы, когда получим -->
-
-					<!-- 
-						Строки вида: 
-
-						<li class="list-group-item list-group-item-action overflow-hidden">
-							Название курса
-						</li>
-					-->
 				</div>
 
-				<div class="please-wait px-4 py-2 bg-light rounded-1">
+				<nav id="all-tutors--list-pagination" class="d-none" aria-label="____">
+					<!-- Сюда подставим кнопки пагинации -->
+				</nav>
+
+				<div class="please-wait row m-0 gap-2 px-4 py-2 bg-light rounded-1 align-items-center">
+					<div class="spinner-border text-secondary" role="status"></div>
 					Loading, please wait...
 				</div>
 
-				<div id="no-courses-found-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
-					No courses found. Try again later
+				<div id="no-tutors-found-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
+					No courses found. You need select course to watch list of tutors. Try again later
 				</div>
 
-				<nav id="courses-list-pagination" class="d-none" aria-label="____">
-					<ul class="pagination justify-content-center">
-						<li class="page-item d-sm-none">
-							<a class="page-link" href="#" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-
-						<li class="page-item d-none d-sm-flex">
-							<a class="page-link" href="#">Previous </a>
-						</li>
-
-						<!-- Сюда подставим -->
-
-						<li class="page-item d-none d-sm-flex">
-							<a class="page-link" href="#">Next</a>
-						</li>
-
-						<li class="page-item d-sm-none">
-							<a class="page-link" href="#" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
+				<!-- <div id="_request-button" class="d-flex align-items-end"> -->
+				<button type="button" id="request-button"
+						class="btn btn-primary col-4 align-self-center">
+					Request
+				</button>
+				<!-- </div> -->
 			</div>
 		</div>
 
@@ -291,14 +253,6 @@
 				   Сюда поместим репетиторов, после фильтрации по параметрам в 
 				   разделе Search tutors, после нажатия на кнопку "Search tutor"
 				-->
-
-				<!-- 
-				   Строки вида: 
-
-				   <li class="list-group-item list-group-item-action overflow-hidden">
-					   данные репетитора
-				   </li>
-				-->
 			</div>
 
 			<div id="no-filtered-tutors-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
@@ -306,69 +260,8 @@
 			</div>
 
 			<nav id="filtered-tutors-list-pagination" class="d-none" aria-label="____">
-				<!-- Сюда подставим -->
+				<!-- Сюда подставим кнопки пагинации -->
 			</nav>
-		</div>
-
-		<hr>
-
-		<div class="row justify-content-center">
-			<div id="all-tutors-list-block" class="d-flex flex-column gap-4 col-lg-8">
-				<h2 class="">All available tutors</h2>
-
-				<div id="all-tutors-list-itself" class="list-group d-none">
-					<!-- Сюда поместим курсы, когда получим -->
-
-					<!-- 
-						Строки вида: 
-
-						<li class="list-group-item list-group-item-action overflow-hidden">
-							Название курса
-						</li>
-					-->
-				</div>
-
-				<nav id="all-tutors--list-pagination" class="d-none" aria-label="____">
-					<ul class="pagination justify-content-center">
-						<li class="page-item d-sm-none">
-							<a class="page-link" href="#" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-
-						<li class="page-item d-none d-sm-flex">
-							<a class="page-link" href="#">Previous </a>
-						</li>
-
-						<!-- Сюда подставим -->
-
-						<li class="page-item d-none d-sm-flex">
-							<a class="page-link" href="#">Next</a>
-						</li>
-
-						<li class="page-item d-sm-none">
-							<a class="page-link" href="#" aria-label="Next">
-								<span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
-					</ul>
-				</nav>
-
-				<div class="please-wait px-4 py-2 bg-light rounded-1">
-					Loading, please wait...
-				</div>
-
-				<div id="no-tutors-found-banner" class="px-4 py-2 bg-danger rounded-1 d-none">
-					No courses found. You need select course to watch list of tutors. Try again later
-				</div>
-
-				<!-- <div id="_request-button" class="d-flex align-items-end"> -->
-				<button type="button" id="request-button"
-						class="btn btn-primary col-4 align-self-center">
-					Request
-				</button>
-				<!-- </div> -->
-			</div>
 		</div>
 	</main>
 
