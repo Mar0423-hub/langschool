@@ -191,16 +191,16 @@ const onUserAccPageContentLoaded = async () => {
 		return itemsList.slice(start, end).map(item =>
 			`
 				<tr>
-					<td class="border">${item.id}</td>
+					<td class="border text-center px-2 py-1">${item.id}</td>
 
-					<td class="border">
+					<td class="border px-2 py-1">
 						${coursesList.find(course => course.id === item.course_id)?.name}
 					</td>
 
-					<td class="border">${item.date_start}</td>
-					<td class="border">${item.price}</td>
+					<td class="border text-center px-2 py-1">${item.date_start}</td>
+					<td class="border text-center px-2 py-1">${item.price}</td>
 
-					<td class="border">
+					<td class="border text-center px-2 py-1">
 						<a href="#" id="cancel-order" data-id="${item.id}">Cancel</a>
 						<a href="#" id="upd-order" data-id="${item.id}" data-bs-toggle="modal"
 							data-bs-target="#updCourseModal"  data-bs-whatever="${item.id}">
