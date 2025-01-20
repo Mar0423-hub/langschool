@@ -4,7 +4,7 @@ const TURN_OFF_PAGER_FOR_ONE_PAGE = false;
 // const TURN_OFF_PAGER_FOR_ONE_PAGE = true;
 
 const MAX_ORDERS_PER_PAGE = 5;
-// const MAX_COURSES_PER_PAGE = 2;
+// const MAX_ORDERS_PER_PAGE = 1;
 
 const apiBase = 'http://cat-facts-api.std-900.ist.mospolytech.ru/api/';
 const apiKeyPostfix = '?api_key=667134bc-821e-4764-82b6-9949b611a421';
@@ -13,63 +13,11 @@ const apiKeyPostfix = '?api_key=667134bc-821e-4764-82b6-9949b611a421';
 // Дожидаемся загрузки страницы, перед тем как что-то делать
 const onIndexPageContentLoaded = async () => {
 
-	// let ordersList = [];
-	// try {
-	// 	const ordersList = await fetch(apiBase + 'orders' + apiKeyPostfix);
-	// 	coursesList = await coursesResponse.json();
-	// } catch (err) { /* Считаем, нет заявок */ }
-
-	// Заглушка на время дебага, чтобы не делать бесконечные запросы к серверу
-	const ordersList = [
-		{
-			"id": 348,
-			"duration": 1,
-			"persons": 1,
-			"price": 1,
-			"supplementary": false,
-			"earlyRegistration": false,
-			"groupEnrollment": false,
-			"intensiveCourse": false,
-			"personalized": false,
-			"excursions": false,
-			"assessment": false,
-			"interactive": false,
-			"tutor_id": 2,
-			"course_id": 0,
-			"date_start": "2025-02-10",
-			"time_start": "10:00:00",
-			"early_registration": false,
-			"group_enrollment": false,
-			"intensive_course": false,
-			"student_id": 15,
-			"created_at": "2025-01-20T13:29:12.025116714",
-			"updated_at": "2025-01-20T13:29:12.025133784"
-		},
-		{
-			"id": 349,
-			"duration": 1,
-			"persons": 2,
-			"price": 1,
-			"supplementary": false,
-			"earlyRegistration": false,
-			"groupEnrollment": false,
-			"intensiveCourse": false,
-			"personalized": false,
-			"excursions": false,
-			"assessment": false,
-			"interactive": false,
-			"tutor_id": 3,
-			"course_id": 0,
-			"date_start": "2025-03-15",
-			"time_start": "15:00:00",
-			"early_registration": false,
-			"group_enrollment": false,
-			"intensive_course": false,
-			"student_id": 15,
-			"created_at": "2025-01-20T13:31:50.508164867",
-			"updated_at": "2025-01-20T13:31:50.508180747"
-		}
-	];
+	let ordersList = [];
+	try {
+		const ordersListResp = await fetch(apiBase + 'orders' + apiKeyPostfix);
+		ordersList = await ordersListResp.json();
+	} catch (err) { /* Считаем, нет заявок */ }
 
 	const notifyArea = document.getElementById('notify-area');
 
@@ -219,14 +167,14 @@ const onIndexPageContentLoaded = async () => {
 
 		return itemsList.slice(start, end).map(item =>
 			`
-				<tr role="button">
+				<tr>
 					<td class="border">${item.id}</td>
 					<td class="border">${item.course_id}</td>
 					<td class="border">${item.date_start}</td>
 					<td class="border">${item.price}</td>
 
 					<td class="border">
-						<a href="#" id="cancel-order">Cancel</a>
+						<a href="#" id="cancel-order" data-id="${item.id}">Cancel</a>
 						<a href="#" id="upd-order" data-id="${item.id}">Edit</a>
 					</td>
 				</tr>
@@ -234,11 +182,59 @@ const onIndexPageContentLoaded = async () => {
 			.join('\n');
 	};
 
-
 	const ordersTableBody = document.getElementById('orders-table-body');
 
-	ordersTableBody.innerHTML = getTablearkup(ordersList, 20);
+	const showCoursesList = (pageNum = 1) => {
+		ordersTableBody.innerHTML =
+			getTablearkup(ordersList, MAX_ORDERS_PER_PAGE, pageNum);
+	};
 
+	showCoursesList();
+
+	// Настраиваем пагинацию
+
+	const ordersListPagination = document?.querySelector('#orders-list-pagination');
+
+	const pagesNumber =
+		numberOfPages(ordersList.length, MAX_ORDERS_PER_PAGE);
+
+	if (!TURN_OFF_PAGER_FOR_ONE_PAGE || (pagesNumber !== 1))
+		reveal(ordersListPagination);
+
+	ordersListPagination.innerHTML =
+		paginationTemplate(ordersList.length, MAX_ORDERS_PER_PAGE);
+
+	ordersListPagination.querySelector('[data-index="1"]')
+		?.classList.add('active');
+
+	vitalizePager(ordersListPagination, pagesNumber, showCoursesList);
+
+
+	// Удаление заявки
+
+	const onActionClick = async evt => {
+		evt.preventDefault();
+
+		const target = evt.target;
+
+		if (target?.id === 'cancel-order') {
+			try {
+				const orderID = target?.dataset['id'];
+
+				const res = await fetch(apiBase + 'orders/' + orderID + apiKeyPostfix,
+					{ method: 'DELETE', });
+
+				target?.closest('tr').remove();
+
+				successAlert('Canceled');
+			} catch (err) {
+				console.error(err);
+				errAlert('Fail');
+			}
+		}
+	};
+
+	ordersTableBody.addEventListener('click', onActionClick);
 
 
 	// Оживляем модалку редактирования курса
@@ -273,6 +269,7 @@ const onIndexPageContentLoaded = async () => {
 
 
 	// Время от выбранной даты
+
 	const updateTimesList = date => {
 		const groupedDateTimes = latestCourse?.grouped_date_times || {};
 		const times = groupedDateTimes[date] || [];
@@ -289,25 +286,11 @@ const onIndexPageContentLoaded = async () => {
 		}
 	};
 
+
+	// 
+
 	const onDateSwitch = evt => updateTimesList(evt.target.value);
 	reqStartDate.addEventListener('change', onDateSwitch);
-
-	const onCalc = () => {
-		const courseFeePerHour = latestCourse.course_fee_per_hour;
-		const courseTotalLength = latestCourse.total_length;
-		const courseWeekLength = latestCourse.week_length;
-		const durationInHours = courseTotalLength * courseWeekLength;
-		const studentsNumber = reqStudentsNumber?.value || 1;
-		const isWeekendOrHoliday = 1;
-		const morningSurcharge = 0;
-		const eveningSurcharge = 0;
-
-		const total = Math.floor(((courseFeePerHour * durationInHours * isWeekendOrHoliday) + morningSurcharge + eveningSurcharge) * studentsNumber);
-
-		reqTotalCost.innerHTML = total;
-	};
-
-	reqCalc.addEventListener('click', onCalc);
 
 	const onSend = async () => {
 
@@ -345,7 +328,7 @@ const onIndexPageContentLoaded = async () => {
 
 	reqSend.addEventListener('click', onSend);
 
-	const onRequestCourseModalShow = evt => {
+	const onUpdOrderModalShow = evt => {
 		const link = evt.relatedTarget;
 		const courseID = +link.getAttribute('data-bs-whatever');
 
@@ -375,7 +358,7 @@ const onIndexPageContentLoaded = async () => {
 		reqCourseDuration.value = course?.total_length + ' weeks';
 	};
 
-	requestCourseModal.addEventListener('show.bs.modal', onRequestCourseModalShow);
+	requestCourseModal.addEventListener('show.bs.modal', onUpdOrderModalShow);
 };
 
 // Дожидаемся загрузки страницы, перед тем как что-то делать
