@@ -47,10 +47,7 @@
 
 	<main class="container max-width-lg d-flex flex-column gap-5 px-4 py-5">
 		<div class="row">
-			<div id="notify-area" class="col-12 d-none">
-				<div class="alert alert-light px-4 py-2">
-					Notify area
-				</div>
+			<div id="notify-area" class="col-12">
 			</div>
 		</div>
 
@@ -265,12 +262,12 @@
 		</span>
 
 		<span>Follow us on
-			<a rel="noopener noreferrer" href="#">
+			<a rel="noopener noreferrer" href="https://facebook.com/langschool">
 				Facebook
 			</a>,
-			<a rel="noopener noreferrer" href="#">
+			<a rel="noopener noreferrer" href="https://x.com/langschool">
 				Twitter</a>,
-			<a rel="noopener noreferrer" href="#">
+			<a rel="noopener noreferrer" href="https://instagram.com/langschool">
 				Instagram
 			</a>
 		</span>
@@ -305,7 +302,7 @@
 								Tutor name:
 							</label>
 
-							<input type="text" id="req-tutor-name" class="form-control">
+							<input type="text" id="req-tutor-name" class="form-control" disabled>
 						</div>
 
 						<div class="">
@@ -314,7 +311,7 @@
 							</label>
 
 							<select id="req-start-date" class="form-control" disabled>
-								<option value="">no known date</option>
+								<option value="">No known date</option>
 							</select>
 						</div>
 
@@ -329,7 +326,12 @@
 						</div>
 
 						<div class="">
-							Duration: <span id="req-course-duration">Unknown</span>
+							<label for="req-course-duration" class="col-form-label">
+								Duration:
+							</label>
+
+							<input type="text" id="req-course-duration" class="form-control"
+								   val="Unknown" disabled>
 						</div>
 
 						<div class="">
@@ -346,48 +348,50 @@
 							Extended options:
 						</div>
 
+						<fieldset>
+							<div class="">
+								<input type="checkbox" class="form-check-input" id="req-add-opt-supplementary">
+
+								<label for="req-add-opt-supplementary" class="form-check-label">
+									Supplementary
+								</label>
+							</div>
+
+							<div class="">
+								<input type="checkbox" class="form-check-input" id="req-add-opt-personalized">
+
+								<label for="req-add-opt-personalized" class="form-check-label">
+									Personalized
+								</label>
+							</div>
+
+							<div class="">
+								<input type="checkbox" class="form-check-input" id="req-add-opt-excursions">
+
+								<label for="req-add-opt-excursions" class="form-check-label">
+									Excursions
+								</label>
+							</div>
+
+							<div class="">
+								<input type="checkbox" class="form-check-input" id="req-add-opt-assessment">
+
+								<label for="req-add-opt-assessment" class="form-check-label">
+									Assessment
+								</label>
+							</div>
+
+							<div class="">
+								<input type="checkbox" class="form-check-input" id="req-add-opt-interactive">
+
+								<label for="req-add-opt-interactive" class="form-check-label">
+									Interactive
+								</label>
+							</div>
+						</fieldset>
+
 						<div class="">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-supplementary">
-
-							<label for="req-add-opt-supplementary" class="form-check-label">
-								Supplementary
-							</label>
-						</div>
-
-						<div class="">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-personalized">
-
-							<label for="req-add-opt-personalized" class="form-check-label">
-								Personalized
-							</label>
-						</div>
-
-						<div class="">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-excursions">
-
-							<label for="req-add-opt-excursions" class="form-check-label">
-								Excursions
-							</label>
-						</div>
-
-						<div class="">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-assessment">
-
-							<label for="req-add-opt-assessment" class="form-check-label">
-								Assessment
-							</label>
-						</div>
-
-						<div class="">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-interactive">
-
-							<label for="req-add-opt-interactive" class="form-check-label">
-								Interactive
-							</label>
-						</div>
-
-						<div class="">
-							Total: <span id="total-cost">0</span>₽
+							Total: <span id="req-total-cost">0</span>₽
 						</div>
 					</form>
 				</div>
@@ -397,11 +401,11 @@
 						Cancel
 					</button>
 
-					<button type="button" class="btn btn-secondary">
+					<button type="button" id="req-calc" class="btn btn-primary">
 						Calculate
 					</button>
 
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+					<button type="button" id="req-send" class="btn btn-primary" data-bs-dismiss="modal">
 						Submit
 					</button>
 				</div>

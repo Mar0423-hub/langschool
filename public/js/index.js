@@ -131,6 +131,24 @@ const onIndexPageContentLoaded = async () => {
 		}
 	];
 
+	const notifyArea = document.getElementById('notify-area');
+
+	const showAlert = (msg = 'Fogotten alert message text', alertType = 'light') => {
+		notifyArea.innerHTML +=
+			`
+				<div class="alert ${'alert-' + alertType} px-4 py-2">
+					${msg}
+				</div>
+			`;
+		console.log('asdf');
+		// Через 5 сек удаляем
+		setTimeout(() => notifyArea.innerHTML = '', 5000);
+
+	};
+
+	const errAlert = (msg = 'Fogotten err message text') =>
+		showAlert(msg, 'danger');
+
 	/** Группирует записи из start_dates по дате */
 	const splitDateTimes = course => {
 		const startDateTimes = course?.start_dates || [];
@@ -534,8 +552,6 @@ const onIndexPageContentLoaded = async () => {
 		if (!id) return;
 
 		const entity = tutorsList.find(item => +item?.id === id);
-
-		console.log(entity);
 	};
 
 	showTutorsList();
@@ -583,8 +599,11 @@ const onIndexPageContentLoaded = async () => {
 	const reqTutorName = requestCourseModal.querySelector('#req-tutor-name');
 	const reqStartDate = requestCourseModal.querySelector('#req-start-date');
 	const reqStartTime = requestCourseModal.querySelector('#req-start-time');
-	const reqStartDuration = requestCourseModal.querySelector('#req-start-duration');
+	const reqCourseDuration = requestCourseModal.querySelector('#req-course-duration');
 	const reqStudentsNumber = requestCourseModal.querySelector('#req-students-number');
+	const reqTotalCost = requestCourseModal.querySelector('#req-total-cost');
+	const reqCalc = requestCourseModal.querySelector('#req-calc');
+	const reqSend = requestCourseModal.querySelector('#req-send');
 
 	const reqAddOptsupplementary =
 		requestCourseModal.querySelector('#req-add-opt-supplementary');
@@ -601,26 +620,124 @@ const onIndexPageContentLoaded = async () => {
 	const reqAddOptInteractive =
 		requestCourseModal.querySelector('#req-add-opt-interactive');
 
+	let latestCourse = [];
 
-	requestCourseModal.addEventListener('show.bs.modal', event => {
-		const link = event.relatedTarget;
+	// Отбрасываем секунды
+	const refuseSec = time =>
+		time.split(':').slice(0, 2).join(':');
+
+	// Время от выбранной даты
+	const updateTimesList = date => {
+		const groupedDateTimes = latestCourse?.grouped_date_times || {};
+		const times = groupedDateTimes[date] || [];
+
+		if (times.length) {
+			reqStartTime.innerHTML = times
+				.map(time => `<option value="${refuseSec(time)}">${refuseSec(time)}</option>`);
+
+			reqStartTime.removeAttribute('disabled');
+		}
+		else {
+			reqStartTime.innerHTML = 'No known times';
+			reqStartTime.setAttribute('disabled');
+		}
+	};
+
+	const onDateSwitch = evt => updateTimesList(evt.target.value);
+	reqStartDate.addEventListener('change', onDateSwitch);
+
+	const onCalc = () => {
+		const courseFeePerHour = latestCourse.course_fee_per_hour;
+		const courseTotalLength = latestCourse.total_length;
+		const courseWeekLength = latestCourse.week_length;
+		const durationInHours = courseTotalLength * courseWeekLength;
+		const studentsNumber = reqStudentsNumber?.value || 1;
+		const isWeekendOrHoliday = 1;
+		const morningSurcharge = 0;
+		const eveningSurcharge = 0;
+
+		const total = Math.floor(((courseFeePerHour * durationInHours * isWeekendOrHoliday) + morningSurcharge + eveningSurcharge) * studentsNumber);
+
+		reqTotalCost.innerHTML = total;
+	};
+
+	reqCalc.addEventListener('click', onCalc);
+
+	const onSend = async () => {
+
+		// Берём из полей формы и не только
+
+		const tutor_id = latestCourse?.id;
+		const date_start = reqStartDate?.value;
+		const time_start = reqStartTime?.value;
+		const persons = reqStudentsNumber?.value || 1;
+		const duration = 1; // Временно
+		const price = 1; // Временно
+
+		if (!tutor_id || !date_start || !time_start || !persons || !duration || !price)
+			return errAlert('Wrong data');
+
+		let attemptResult;
+
+		try {
+			const body = JSON.stringify({
+				tutor_id, date_start, time_start, persons, duration, price,
+			});
+
+			attemptResult = await fetch(apiBase + 'orders' + apiKeyPostfix,
+				{
+					method: 'POST',
+					headers: { "Content-Type": "application/json", },
+					body,
+				}
+			);
+
+			console.log(attemptResult);
+		} catch (err) {
+			console.error(attemptResult);
+			return errAlert('Request fail!');
+		}
+
+		// Очищаем поля формы
+		// ...
+		// ...
+		// ...
+
+		// console.log(__);
+
+	};
+
+	reqSend.addEventListener('click', onSend);
+
+	const onRequestCourseModalShow = evt => {
+		const link = evt.relatedTarget;
 		const courseID = +link.getAttribute('data-bs-whatever');
+		const course = latestCourse = coursesList[courseID];
 
-		if (!courseID) return;
+		if (!courseID || !course) return;
 
-		reqCourseName.value = coursesList[courseID]?.name || '-';
+		reqCourseName.value = course?.name || '-';
+		reqTutorName.value = course?.teacher || 'unknown';
 
+		const groupedDateTimes = course?.grouped_date_times || {};
+		const dates = Object.keys(groupedDateTimes);
 
+		if (course?.start_dates.length) {
+			reqStartDate.innerHTML = dates
+				.map(date => `<option value="${date}">${date}</option>`);
 
+			reqStartDate.removeAttribute('disabled');
+		}
 
+		if (course?.start_dates.length) {
+			const selectedDate = dates[0];
+			updateTimesList(selectedDate);
+		}
 
+		reqCourseDuration.value = course?.total_length + ' weeks';
+	};
 
-
-
-
-
-		// console.log(courseID);
-	});
+	requestCourseModal.addEventListener('show.bs.modal', onRequestCourseModalShow);
 };
 
 // Дожидаемся загрузки страницы, перед тем как что-то делать
