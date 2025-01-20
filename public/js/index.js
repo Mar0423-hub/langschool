@@ -691,10 +691,8 @@ const onIndexPageContentLoaded = async () => {
 					body,
 				}
 			);
-
-			console.log(attemptResult);
 		} catch (err) {
-			console.error(attemptResult);
+			console.error(err);
 			return errAlert('Request fail!');
 		}
 
@@ -712,7 +710,9 @@ const onIndexPageContentLoaded = async () => {
 	const onRequestCourseModalShow = evt => {
 		const link = evt.relatedTarget;
 		const courseID = +link.getAttribute('data-bs-whatever');
-		const course = latestCourse = coursesList[courseID];
+		
+		const course = latestCourse = coursesList
+			.find(course => course.id === courseID);
 
 		if (!courseID || !course) return;
 
