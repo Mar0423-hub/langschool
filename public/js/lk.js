@@ -356,25 +356,9 @@ const onIndexPageContentLoaded = async () => {
 			return errAlert('Wrong data');
 
 		try {
-			// const body = {
-			// 	course_id, date_start, time_start, persons, duration, price,
-			// };
-
 			const body = JSON.stringify({
 				course_id, date_start, time_start, persons, duration, price,
 			});
-
-			// const keys = [...Object.keys(keyValPairs)];
-
-			// const putParams =
-			// 	keys.reduce((arr, key) =>
-			// 		(arr.push(`${key}=${keyValPairs[key]}`), arr), [])
-			// 		.join('&');
-
-			// return console.log(putParams);
-
-			// await fetch(apiBase + 'orders/' + latestOrder.id + apiKeyPostfix + '&' + putParams,
-			// 	{ method: 'PUT', });
 
 			await fetch(apiBase + 'orders/' + latestOrder.id + apiKeyPostfix,
 				{
