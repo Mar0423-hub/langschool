@@ -284,109 +284,109 @@
 				<div class="modal-header">
 					<h1 class="modal-title fs-5" id="requestCourseModalLabel">Request course form</h1>
 
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+					<button type="button" class="btn-close"
+							data-bs-dismiss="modal"
+							aria-label="Close">
 					</button>
 				</div>
 
 				<div class="modal-body">
-					<form>
-						<div class="mb-3">
+					<form class="d-flex flex-column gap-2">
+						<div class="">
 							<label for="req-course-name" class="col-form-label">
 								Course name:
 							</label>
 
-							<input type="text" class="form-control" id="req-course-name">
+							<input type="text" id="req-course-name" class="form-control" disabled>
 						</div>
 
-						<div class="mb-3">
+						<div class="">
 							<label for="req-tutor-name" class="col-form-label">
 								Tutor name:
 							</label>
 
-							<input type="text" class="form-control" id="req-tutor-name">
+							<input type="text" id="req-tutor-name" class="form-control">
 						</div>
 
-						<div class="mb-3">
-							<label for="start-date" class="col-form-label">
+						<div class="">
+							<label for="req-start-date" class="col-form-label">
 								Start date:
 							</label>
 
-							<select class="form-control" id="start-date">
-								<option>one-date</option>
-								<option>other-date</option>
+							<select id="req-start-date" class="form-control" disabled>
+								<option value="">no known date</option>
 							</select>
 						</div>
 
-						<div class="mb-3">
-							<label for="start-time" class="col-form-label">
+						<div class="">
+							<label for="req-start-time" class="col-form-label">
 								Start time:
 							</label>
 
-							<select class="form-control" id="start-time">
-								<option>one : time</option>
-								<option>other : time</option>
+							<select id="req-start-time" class="form-control" disabled>
+								<option>Select date first</option>
 							</select>
 						</div>
 
-						<div class="mb-3">
-							Duration: <span id="course-duration">xxxx</span>
+						<div class="">
+							Duration: <span id="req-course-duration">Unknown</span>
 						</div>
 
-						<div class="mb-3">
+						<div class="">
 							<label for="req-students-number" class="col-form-label">
 								Students number:
 							</label>
 
 							<input type="number" id="req-students-number"
-								value="1" min="1"
-								class="form-control">
+								   value="1" min="1"
+								   class="form-control">
 						</div>
 
-						<div class="mb-3">
+						<div class="">
 							Extended options:
 						</div>
 
-						<div class="mb-3">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-1">
+						<div class="">
+							<input type="checkbox" class="form-check-input" id="req-add-opt-supplementary">
 
-							<label for="req-add-opt-1" class="form-check-label">
+							<label for="req-add-opt-supplementary" class="form-check-label">
 								Supplementary
 							</label>
 						</div>
 
-						<div class="mb-3">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-2">
+						<div class="">
+							<input type="checkbox" class="form-check-input" id="req-add-opt-personalized">
 
-							<label for="req-add-opt-2" class="form-check-label">
+							<label for="req-add-opt-personalized" class="form-check-label">
 								Personalized
 							</label>
 						</div>
 
-						<div class="mb-3">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-3">
+						<div class="">
+							<input type="checkbox" class="form-check-input" id="req-add-opt-excursions">
 
-							<label for="req-add-opt-3" class="form-check-label">
+							<label for="req-add-opt-excursions" class="form-check-label">
 								Excursions
 							</label>
 						</div>
 
-						<div class="mb-3">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-4">
+						<div class="">
+							<input type="checkbox" class="form-check-input" id="req-add-opt-assessment">
 
-							<label for="req-add-opt-4" class="form-check-label">
+							<label for="req-add-opt-assessment" class="form-check-label">
 								Assessment
 							</label>
 						</div>
 
-						<div class="mb-3">
-							<input type="checkbox" class="form-check-input" id="req-add-opt-5">
+						<div class="">
+							<input type="checkbox" class="form-check-input" id="req-add-opt-interactive">
 
-							<label for="req-add-opt-5" class="form-check-label">
+							<label for="req-add-opt-interactive" class="form-check-label">
 								Interactive
 							</label>
 						</div>
 
-						<div class="mb-3">
+						<div class="">
 							Total: <span id="total-cost">0</span>₽
 						</div>
 					</form>

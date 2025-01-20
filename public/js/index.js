@@ -575,6 +575,52 @@ const onIndexPageContentLoaded = async () => {
 	filterTutorsForm?.querySelector('.filter-tutor')?.removeAttribute('disabled');
 	// Ставим обработчик отправки формы
 	filterTutorsForm.addEventListener('submit', onFilterTutorsFormSubmit);
+
+
+	// Оживляем модалку заказа курса
+	const requestCourseModal = document.getElementById('requestCourseModal');
+	const reqCourseName = requestCourseModal.querySelector('#req-course-name');
+	const reqTutorName = requestCourseModal.querySelector('#req-tutor-name');
+	const reqStartDate = requestCourseModal.querySelector('#req-start-date');
+	const reqStartTime = requestCourseModal.querySelector('#req-start-time');
+	const reqStartDuration = requestCourseModal.querySelector('#req-start-duration');
+	const reqStudentsNumber = requestCourseModal.querySelector('#req-students-number');
+
+	const reqAddOptsupplementary =
+		requestCourseModal.querySelector('#req-add-opt-supplementary');
+
+	const reqAddOptPersonalized =
+		requestCourseModal.querySelector('#req-add-opt-personalized');
+
+	const reqAddOptExcursions =
+		requestCourseModal.querySelector('#req-add-opt-excursions');
+
+	const reqAddOptAssessment =
+		requestCourseModal.querySelector('#req-add-opt-assessment');
+
+	const reqAddOptInteractive =
+		requestCourseModal.querySelector('#req-add-opt-interactive');
+
+
+	requestCourseModal.addEventListener('show.bs.modal', event => {
+		const link = event.relatedTarget;
+		const courseID = +link.getAttribute('data-bs-whatever');
+
+		if (!courseID) return;
+
+		reqCourseName.value = coursesList[courseID]?.name || '-';
+
+
+
+
+
+
+
+
+
+
+		// console.log(courseID);
+	});
 };
 
 // Дожидаемся загрузки страницы, перед тем как что-то делать
