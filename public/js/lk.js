@@ -11,7 +11,7 @@ const apiKeyPostfix = '?api_key=667134bc-821e-4764-82b6-9949b611a421';
 
 
 // Дожидаемся загрузки страницы, перед тем как что-то делать
-const onIndexPageContentLoaded = async () => {
+const onUserAccPageContentLoaded = async () => {
 
 	let coursesList = [];
 	try {
@@ -415,4 +415,4 @@ const onIndexPageContentLoaded = async () => {
 };
 
 // Дожидаемся загрузки страницы, перед тем как что-то делать
-document.addEventListener('DOMContentLoaded', onIndexPageContentLoaded);
+document.addEventListener('DOMContentLoaded', onUserAccPageContentLoaded);
