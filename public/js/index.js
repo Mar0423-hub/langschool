@@ -36,7 +36,7 @@ const onIndexPageContentLoaded = async () => {
 					${msg}
 				</div>
 			`;
-		console.log('asdf');
+
 		// Через 5 сек удаляем
 		setTimeout(() => notifyArea.innerHTML = '', 5000);
 
