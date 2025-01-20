@@ -23,7 +23,7 @@ const onIndexPageContentLoaded = async () => {
 
 	let tutorsList = [];
 	try {
-		const  tutorsResponse = await fetch(apiBase + 'tutors' + apiKeyPostfix);
+		const tutorsResponse = await fetch(apiBase + 'tutors' + apiKeyPostfix);
 		tutorsList = await tutorsResponse.json();
 	} catch (err) { /* Считаем, нет репетиторов */ }
 
@@ -433,7 +433,7 @@ const onIndexPageContentLoaded = async () => {
 	const onDateSwitch = evt => updateTimesList(evt.target.value);
 	reqStartDate.addEventListener('change', onDateSwitch);
 
-	const onCalc = () => {
+	const calcTotal = () => {
 		const courseFeePerHour = latestCourse.course_fee_per_hour;
 		const courseTotalLength = latestCourse.total_length;
 		const courseWeekLength = latestCourse.week_length;
@@ -443,10 +443,11 @@ const onIndexPageContentLoaded = async () => {
 		const morningSurcharge = 0;
 		const eveningSurcharge = 0;
 
-		const total = Math.floor(((courseFeePerHour * durationInHours * isWeekendOrHoliday) + morningSurcharge + eveningSurcharge) * studentsNumber);
-
-		reqTotalCost.innerHTML = total;
+		return Math.floor(((courseFeePerHour * durationInHours * isWeekendOrHoliday) + morningSurcharge + eveningSurcharge) * studentsNumber);
 	};
+
+	const onCalc = () =>
+		reqTotalCost.innerHTML = calcTotal();
 
 	reqCalc.addEventListener('click', onCalc);
 
@@ -459,7 +460,7 @@ const onIndexPageContentLoaded = async () => {
 		const time_start = reqStartTime?.value;
 		const persons = reqStudentsNumber?.value || 1;
 		const duration = 1; // Временно
-		const price = 1; // Временно
+		const price = calcTotal();
 
 		if (!course_id || !date_start || !time_start || !persons || !duration || !price)
 			return errAlert('Wrong data');
