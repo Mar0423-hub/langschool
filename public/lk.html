@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="css/index.css">
 
 	<script type="module" crossorigin src="./js/bootstrap.min.js"></script>
-	<!-- <script type="module" crossorigin src="./js/lk.js"></script> -->
+	<script type="module" crossorigin src="./js/lk.js"></script>
 
 	<title>Language School - User Account</title>
 </head>
@@ -36,7 +36,7 @@
 				<div id="navbar-7a72d410c5b3">
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="index.html">Main page</a>
+							<a class="nav-link" href="/">Main page</a>
 						</li>
 					</ul>
 				</div>
@@ -50,6 +50,21 @@
 			</div>
 		</div>
 
+		<table id="orders-table" class="border">
+			<thead>
+				<tr>
+					<th class="border">id</th>
+					<th class="border">course id</th>
+					<th class="border">date</th>
+					<th class="border">cost</th>
+					<th class="border">Acts</th>
+				</tr>
+			</thead>
+
+			<tbody id="orders-table-body">
+				<!-- Сюда поместим заказы, когда загрузятся -->
+			</tbody>
+		</table>
 	</main>
 
 	<footer class="p-4 bg-primary col-12" data-bs-theme="dark">

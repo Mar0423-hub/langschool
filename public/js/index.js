@@ -146,8 +146,8 @@ const onIndexPageContentLoaded = async () => {
 
 	};
 
-	const errAlert = (msg = 'Fogotten err message text') =>
-		showAlert(msg, 'danger');
+	const successAlert = msg => showAlert(msg, 'success');
+	const errAlert = msg => showAlert(msg, 'danger');
 
 	/** Группирует записи из start_dates по дате */
 	const splitDateTimes = course => {
@@ -696,13 +696,7 @@ const onIndexPageContentLoaded = async () => {
 			return errAlert('Request fail!');
 		}
 
-		// Очищаем поля формы
-		// ...
-		// ...
-		// ...
-
-		// console.log(__);
-
+		successAlert('Done!');
 	};
 
 	reqSend.addEventListener('click', onSend);
@@ -710,7 +704,7 @@ const onIndexPageContentLoaded = async () => {
 	const onRequestCourseModalShow = evt => {
 		const link = evt.relatedTarget;
 		const courseID = +link.getAttribute('data-bs-whatever');
-		
+
 		const course = latestCourse = coursesList
 			.find(course => course.id === courseID);
 
