@@ -131,6 +131,24 @@ const onIndexPageContentLoaded = async () => {
 		}
 	];
 
+	/** Группирует записи из start_dates по дате */
+	const splitDateTimes = course => {
+		const startDateTimes = course?.start_dates || [];
+
+		const groupedDateTimes = startDateTimes.reduce((acc, dateTime) => {
+			const date = dateTime.split('T')[0];
+			const time = dateTime.split('T')[1];
+			acc[date] ||= [];
+			acc[date].push(time);
+
+			return acc;
+		}, {});
+
+		course.grouped_date_times = groupedDateTimes;
+	};
+
+	coursesList.forEach(splitDateTimes);
+
 	// Заглушка на время дебага, чтобы не делать бесконечные запросы к серверу
 	const tutorsList = [
 		{
@@ -360,15 +378,16 @@ const onIndexPageContentLoaded = async () => {
 	};
 
 	/** Формирует содержимое "страницы" - подмножество элементов */
-	const getPageMarkup = (itemsList, perPage, pageNum = 1) => {
+	const getPageMarkup = (itemsList, perPage, pageNum = 1, request = 'course') => {
 		const start = (pageNum - 1) * perPage;
 		const end = start + perPage;
 
-		// data-bs-toggle="modal" data-bs-target="#requestTutorModal"
+		const modalID = request === 'course'
+			? 'requestCourseModal' : 'requestTutorModal';
 
 		return itemsList.slice(start, end).map(item =>
 			`<a href="#" data-id="${item.id}" 
-				data-bs-toggle="modal" data-bs-target="#requestTutorModal" 
+				data-bs-toggle="modal" data-bs-target="#${modalID}" 
 				data-bs-whatever="${item.id}"
 				class="list-group-item list-group-item-action overflow-hidden">
 
@@ -422,7 +441,7 @@ const onIndexPageContentLoaded = async () => {
 		conceal(noFilteredCoursesBanner);
 
 		filteredCoursesListItself.innerHTML =
-			getPageMarkup(filteredCoursesList, MAX_COURSES_PER_PAGE, pageNum);
+			getPageMarkup(filteredCoursesList, MAX_COURSES_PER_PAGE, pageNum, 'course');
 	};
 
 	showCoursesList();
@@ -504,7 +523,7 @@ const onIndexPageContentLoaded = async () => {
 		conceal(noFilteredTutorsBanner);
 
 		filteredTutorsListItself.innerHTML =
-			getPageMarkup(filteredTutorsList, MAX_TUTORS_PER_PAGE, pageNum);
+			getPageMarkup(filteredTutorsList, MAX_TUTORS_PER_PAGE, pageNum, 'tutor');
 	};
 
 	const onTutorSelection = evt => {
@@ -513,7 +532,7 @@ const onIndexPageContentLoaded = async () => {
 		const link = evt.target;
 		const id = +link?.dataset['id'];
 
-		if(!id) return;
+		if (!id) return;
 
 		const entity = tutorsList.find(item => +item?.id === id);
 
