@@ -252,7 +252,7 @@ const onUserAccPageContentLoaded = async () => {
 			try {
 				const orderID = target?.dataset['id'];
 
-				const res = await fetch(apiBase + 'orders/' + orderID + apiKeyPostfix,
+				await fetch(apiBase + 'orders/' + orderID + apiKeyPostfix,
 					{ method: 'DELETE', });
 
 				target?.closest('tr').remove();
@@ -302,13 +302,17 @@ const onUserAccPageContentLoaded = async () => {
 	// Время от выбранной даты
 
 	const updateTimesList = date => {
-		// console.log(date);
 		const groupedDateTimes = latestCourse?.grouped_date_times || {};
 		const times = groupedDateTimes[date] || [];
+		const currentOrderTime = latestOrder?.time_start;
 
 		if (times.length) {
-			reqStartTime.innerHTML = times
-				.map(time => `<option value="${refuseSec(time)}">${refuseSec(time)}</option>`);
+			reqStartTime.innerHTML = times.map(time =>
+				`<option value="${refuseSec(time)}" 
+					${time === currentOrderTime ? 'selected' : ''}>
+
+					${refuseSec(time)}
+				</option>`);
 
 			reqStartTime.removeAttribute('disabled');
 		}
@@ -397,8 +401,10 @@ const onUserAccPageContentLoaded = async () => {
 		const dates = Object.keys(groupedDateTimes);
 
 		if (course?.start_dates.length) {
-			reqStartDate.innerHTML = dates
-				.map(date => `<option value="${date}">${date}</option>`);
+			reqStartDate.innerHTML = dates.map(date =>
+				`<option value="${date}" ${date === order.date_start ? 'selected' : ''}>
+					${date}
+				</option>`);
 
 			reqStartDate.removeAttribute('disabled');
 		}
