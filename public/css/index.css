@@ -6,3 +6,8 @@
 .max-width-lg {
 	max-width: 992px;
 }
+
+/* Временно? */
+.min-height-800 {
+	min-height: 800px;
+}
