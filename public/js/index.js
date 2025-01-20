@@ -136,8 +136,7 @@ const onIndexPageContentLoaded = async () => {
 		const startDateTimes = course?.start_dates || [];
 
 		const groupedDateTimes = startDateTimes.reduce((acc, dateTime) => {
-			const date = dateTime.split('T')[0];
-			const time = dateTime.split('T')[1];
+			const [date, time] = dateTime.split('T');
 			acc[date] ||= [];
 			acc[date].push(time);
 
