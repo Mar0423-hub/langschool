@@ -13,11 +13,19 @@ const apiKeyPostfix = '?api_key=667134bc-821e-4764-82b6-9949b611a421';
 // Дожидаемся загрузки страницы, перед тем как что-то делать
 const onIndexPageContentLoaded = async () => {
 
+	let coursesList = [];
+	try {
+		const coursesResponse = await fetch(apiBase + 'courses' + apiKeyPostfix);
+		coursesList = await coursesResponse.json();
+	} catch (err) { /* Считаем, нет курсов */ }
+
 	let ordersList = [];
 	try {
 		const ordersListResp = await fetch(apiBase + 'orders' + apiKeyPostfix);
 		ordersList = await ordersListResp.json();
 	} catch (err) { /* Считаем, нет заявок */ }
+
+	console.log(coursesList, ordersList);
 
 	const notifyArea = document.getElementById('notify-area');
 
@@ -169,13 +177,18 @@ const onIndexPageContentLoaded = async () => {
 			`
 				<tr>
 					<td class="border">${item.id}</td>
-					<td class="border">${item.course_id}</td>
+
+					<td class="border">
+						${coursesList.find(course => course.id === item.course_id)?.name}
+					</td>
+
 					<td class="border">${item.date_start}</td>
 					<td class="border">${item.price}</td>
 
 					<td class="border">
 						<a href="#" id="cancel-order" data-id="${item.id}">Cancel</a>
-						<a href="#" id="upd-order" data-id="${item.id}">Edit</a>
+						<a href="#" id="upd-order" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#updCourseModal" 
+				data-bs-whatever="${item.id}">Edit</a>
 					</td>
 				</tr>
 			`)
@@ -238,12 +251,12 @@ const onIndexPageContentLoaded = async () => {
 
 
 	// Оживляем модалку редактирования курса
-	const requestCourseModal = document.getElementById('requestCourseModal');
-	const reqCourseName = requestCourseModal.querySelector('#req-course-name');
+	const requestCourseModal = document.getElementById('updCourseModal');
+	const reqCourseName = requestCourseModal.querySelector('#req-order-name');
 	const reqTutorName = requestCourseModal.querySelector('#req-tutor-name');
 	const reqStartDate = requestCourseModal.querySelector('#req-start-date');
 	const reqStartTime = requestCourseModal.querySelector('#req-start-time');
-	const reqCourseDuration = requestCourseModal.querySelector('#req-course-duration');
+	const reqCourseDuration = requestCourseModal.querySelector('#req-order-duration');
 	const reqStudentsNumber = requestCourseModal.querySelector('#req-students-number');
 	const reqTotalCost = requestCourseModal.querySelector('#req-total-cost');
 	const reqCalc = requestCourseModal.querySelector('#req-calc');
@@ -264,14 +277,13 @@ const onIndexPageContentLoaded = async () => {
 	const reqAddOptInteractive =
 		requestCourseModal.querySelector('#req-add-opt-interactive');
 
-	let latestCourse = [];
-
+	let latestOrder = [];
 
 
 	// Время от выбранной даты
 
 	const updateTimesList = date => {
-		const groupedDateTimes = latestCourse?.grouped_date_times || {};
+		const groupedDateTimes = latestOrder?.grouped_date_times || {};
 		const times = groupedDateTimes[date] || [];
 
 		if (times.length) {
@@ -296,7 +308,7 @@ const onIndexPageContentLoaded = async () => {
 
 		// Берём из полей формы и не только
 
-		const tutor_id = latestCourse?.id;
+		const tutor_id = latestOrder?.id;
 		const date_start = reqStartDate?.value;
 		const time_start = reqStartTime?.value;
 		const persons = reqStudentsNumber?.value || 1;
@@ -330,32 +342,32 @@ const onIndexPageContentLoaded = async () => {
 
 	const onUpdOrderModalShow = evt => {
 		const link = evt.relatedTarget;
-		const courseID = +link.getAttribute('data-bs-whatever');
+		const orderID = +link.getAttribute('data-bs-whatever');
 
-		const course = latestCourse = coursesList
-			.find(course => course.id === courseID);
+		const order = latestOrder = ordersList
+			.find(order => order.id === orderID);
 
-		if (!courseID || !course) return;
+		if (!orderID || !order) return;
 
-		reqCourseName.value = course?.name || '-';
-		reqTutorName.value = course?.teacher || 'unknown';
+		reqCourseName.value = order?.name || '-';
+		reqTutorName.value = order?.teacher || 'unknown';
 
-		const groupedDateTimes = course?.grouped_date_times || {};
+		const groupedDateTimes = order?.grouped_date_times || {};
 		const dates = Object.keys(groupedDateTimes);
 
-		if (course?.start_dates.length) {
+		if (order?.start_dates.length) {
 			reqStartDate.innerHTML = dates
 				.map(date => `<option value="${date}">${date}</option>`);
 
 			reqStartDate.removeAttribute('disabled');
 		}
 
-		if (course?.start_dates.length) {
+		if (order?.start_dates.length) {
 			const selectedDate = dates[0];
 			updateTimesList(selectedDate);
 		}
 
-		reqCourseDuration.value = course?.total_length + ' weeks';
+		reqCourseDuration.value = order?.total_length + ' weeks';
 	};
 
 	requestCourseModal.addEventListener('show.bs.modal', onUpdOrderModalShow);

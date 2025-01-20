@@ -454,21 +454,21 @@ const onIndexPageContentLoaded = async () => {
 
 		// Берём из полей формы и не только
 
-		const tutor_id = latestCourse?.id;
+		const course_id = latestCourse?.id;
 		const date_start = reqStartDate?.value;
 		const time_start = reqStartTime?.value;
 		const persons = reqStudentsNumber?.value || 1;
 		const duration = 1; // Временно
 		const price = 1; // Временно
 
-		if (!tutor_id || !date_start || !time_start || !persons || !duration || !price)
+		if (!course_id || !date_start || !time_start || !persons || !duration || !price)
 			return errAlert('Wrong data');
 
 		let attemptResult;
 
 		try {
 			const body = JSON.stringify({
-				tutor_id, date_start, time_start, persons, duration, price,
+				course_id, date_start, time_start, persons, duration, price,
 			});
 
 			attemptResult = await fetch(apiBase + 'orders' + apiKeyPostfix,
