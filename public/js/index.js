@@ -426,7 +426,7 @@ const onIndexPageContentLoaded = async () => {
 		}
 		else {
 			reqStartTime.innerHTML = 'No known times';
-			reqStartTime.setAttribute('disabled');
+			reqStartTime.setAttribute('disabled', true);
 		}
 	};
 

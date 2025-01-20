@@ -19,13 +19,28 @@ const onIndexPageContentLoaded = async () => {
 		coursesList = await coursesResponse.json();
 	} catch (err) { /* Считаем, нет курсов */ }
 
+	/** Группирует записи из start_dates по дате */
+	const splitDateTimes = course => {
+		const startDateTimes = course?.start_dates || [];
+
+		const groupedDateTimes = startDateTimes.reduce((acc, dateTime) => {
+			const [date, time] = dateTime.split('T');
+			acc[date] ||= [];
+			acc[date].push(time);
+
+			return acc;
+		}, {});
+
+		course.grouped_date_times = groupedDateTimes;
+	};
+
+	coursesList.forEach(splitDateTimes);
+
 	let ordersList = [];
 	try {
 		const ordersListResp = await fetch(apiBase + 'orders' + apiKeyPostfix);
 		ordersList = await ordersListResp.json();
 	} catch (err) { /* Считаем, нет заявок */ }
-
-	console.log(coursesList, ordersList);
 
 	const notifyArea = document.getElementById('notify-area');
 
@@ -36,7 +51,7 @@ const onIndexPageContentLoaded = async () => {
 					${msg}
 				</div>
 			`;
-		console.log('asdf');
+
 		// Через 5 сек удаляем
 		setTimeout(() => notifyArea.innerHTML = '', 5000);
 
@@ -187,8 +202,11 @@ const onIndexPageContentLoaded = async () => {
 
 					<td class="border">
 						<a href="#" id="cancel-order" data-id="${item.id}">Cancel</a>
-						<a href="#" id="upd-order" data-id="${item.id}" data-bs-toggle="modal" data-bs-target="#updCourseModal" 
-				data-bs-whatever="${item.id}">Edit</a>
+						<a href="#" id="upd-order" data-id="${item.id}" data-bs-toggle="modal"
+							data-bs-target="#updCourseModal"  data-bs-whatever="${item.id}">
+
+							Edit
+						</a>
 					</td>
 				</tr>
 			`)
@@ -251,39 +269,41 @@ const onIndexPageContentLoaded = async () => {
 
 
 	// Оживляем модалку редактирования курса
-	const requestCourseModal = document.getElementById('updCourseModal');
-	const reqCourseName = requestCourseModal.querySelector('#req-order-name');
-	const reqTutorName = requestCourseModal.querySelector('#req-tutor-name');
-	const reqStartDate = requestCourseModal.querySelector('#req-start-date');
-	const reqStartTime = requestCourseModal.querySelector('#req-start-time');
-	const reqCourseDuration = requestCourseModal.querySelector('#req-order-duration');
-	const reqStudentsNumber = requestCourseModal.querySelector('#req-students-number');
-	const reqTotalCost = requestCourseModal.querySelector('#req-total-cost');
-	const reqCalc = requestCourseModal.querySelector('#req-calc');
-	const reqSend = requestCourseModal.querySelector('#req-send');
+	const updCourseModal = document.getElementById('updCourseModal');
+	const reqCourseName = updCourseModal.querySelector('#req-course-name');
+	const reqTutorName = updCourseModal.querySelector('#req-tutor-name');
+	const reqStartDate = updCourseModal.querySelector('#req-start-date');
+	const reqStartTime = updCourseModal.querySelector('#req-start-time');
+	const reqCourseDuration = updCourseModal.querySelector('#req-course-duration');
+	const reqStudentsNumber = updCourseModal.querySelector('#req-students-number');
+	const reqTotalCost = updCourseModal.querySelector('#req-total-cost');
+	const reqCalc = updCourseModal.querySelector('#req-calc');
+	const reqSend = updCourseModal.querySelector('#req-send');
 
 	const reqAddOptsupplementary =
-		requestCourseModal.querySelector('#req-add-opt-supplementary');
+		updCourseModal.querySelector('#req-add-opt-supplementary');
 
 	const reqAddOptPersonalized =
-		requestCourseModal.querySelector('#req-add-opt-personalized');
+		updCourseModal.querySelector('#req-add-opt-personalized');
 
 	const reqAddOptExcursions =
-		requestCourseModal.querySelector('#req-add-opt-excursions');
+		updCourseModal.querySelector('#req-add-opt-excursions');
 
 	const reqAddOptAssessment =
-		requestCourseModal.querySelector('#req-add-opt-assessment');
+		updCourseModal.querySelector('#req-add-opt-assessment');
 
 	const reqAddOptInteractive =
-		requestCourseModal.querySelector('#req-add-opt-interactive');
+		updCourseModal.querySelector('#req-add-opt-interactive');
 
-	let latestOrder = [];
+	let latestOrder = {};
+	let latestCourse = {};
 
 
 	// Время от выбранной даты
 
 	const updateTimesList = date => {
-		const groupedDateTimes = latestOrder?.grouped_date_times || {};
+		// console.log(date);
+		const groupedDateTimes = latestCourse?.grouped_date_times || {};
 		const times = groupedDateTimes[date] || [];
 
 		if (times.length) {
@@ -294,7 +314,7 @@ const onIndexPageContentLoaded = async () => {
 		}
 		else {
 			reqStartTime.innerHTML = 'No known times';
-			reqStartTime.setAttribute('disabled');
+			reqStartTime.setAttribute('disabled', true);
 		}
 	};
 
@@ -304,32 +324,66 @@ const onIndexPageContentLoaded = async () => {
 	const onDateSwitch = evt => updateTimesList(evt.target.value);
 	reqStartDate.addEventListener('change', onDateSwitch);
 
+	const onCalc = () => {
+		const courseFeePerHour = latestCourse.course_fee_per_hour;
+		const courseTotalLength = latestCourse.total_length;
+		const courseWeekLength = latestCourse.week_length;
+		const durationInHours = courseTotalLength * courseWeekLength;
+		const studentsNumber = reqStudentsNumber?.value || 1;
+		const isWeekendOrHoliday = 1;
+		const morningSurcharge = 0;
+		const eveningSurcharge = 0;
+
+		const total = Math.floor(((courseFeePerHour * durationInHours * isWeekendOrHoliday) + morningSurcharge + eveningSurcharge) * studentsNumber);
+
+		reqTotalCost.innerHTML = total;
+	};
+
+	reqCalc.addEventListener('click', onCalc);
+
 	const onSend = async () => {
 
 		// Берём из полей формы и не только
 
-		const tutor_id = latestOrder?.id;
+		const course_id = latestCourse?.id;
 		const date_start = reqStartDate?.value;
 		const time_start = reqStartTime?.value;
 		const persons = reqStudentsNumber?.value || 1;
 		const duration = 1; // Временно
 		const price = 1; // Временно
 
-		if (!tutor_id || !date_start || !time_start || !persons || !duration || !price)
+		if (!course_id || !date_start || !time_start || !persons || !duration || !price)
 			return errAlert('Wrong data');
 
 		try {
+			// const body = {
+			// 	course_id, date_start, time_start, persons, duration, price,
+			// };
+
 			const body = JSON.stringify({
-				tutor_id, date_start, time_start, persons, duration, price,
+				course_id, date_start, time_start, persons, duration, price,
 			});
 
-			await fetch(apiBase + 'orders' + apiKeyPostfix,
+			// const keys = [...Object.keys(keyValPairs)];
+
+			// const putParams =
+			// 	keys.reduce((arr, key) =>
+			// 		(arr.push(`${key}=${keyValPairs[key]}`), arr), [])
+			// 		.join('&');
+
+			// return console.log(putParams);
+
+			// await fetch(apiBase + 'orders/' + latestOrder.id + apiKeyPostfix + '&' + putParams,
+			// 	{ method: 'PUT', });
+
+			await fetch(apiBase + 'orders/' + latestOrder.id + apiKeyPostfix,
 				{
-					method: 'POST',
+					method: 'PUT',
 					headers: { "Content-Type": "application/json", },
 					body,
-				}
-			);
+
+				});
+
 		} catch (err) {
 			console.error(err);
 			return errAlert('Request fail!');
@@ -347,30 +401,33 @@ const onIndexPageContentLoaded = async () => {
 		const order = latestOrder = ordersList
 			.find(order => order.id === orderID);
 
-		if (!orderID || !order) return;
+		const course = latestCourse =
+			coursesList.find(course => course.id === order.course_id);
 
-		reqCourseName.value = order?.name || '-';
-		reqTutorName.value = order?.teacher || 'unknown';
+		if (!orderID || !order || !course) return;
 
-		const groupedDateTimes = order?.grouped_date_times || {};
+		reqCourseName.value = course?.name || '-';
+		reqTutorName.value = course?.teacher || 'unknown';
+
+		const groupedDateTimes = course?.grouped_date_times || {};
 		const dates = Object.keys(groupedDateTimes);
 
-		if (order?.start_dates.length) {
+		if (course?.start_dates.length) {
 			reqStartDate.innerHTML = dates
 				.map(date => `<option value="${date}">${date}</option>`);
 
 			reqStartDate.removeAttribute('disabled');
 		}
 
-		if (order?.start_dates.length) {
+		if (course?.start_dates?.length) {
 			const selectedDate = dates[0];
 			updateTimesList(selectedDate);
 		}
 
-		reqCourseDuration.value = order?.total_length + ' weeks';
+		reqCourseDuration.value = course?.total_length + ' weeks';
 	};
 
-	requestCourseModal.addEventListener('show.bs.modal', onUpdOrderModalShow);
+	updCourseModal.addEventListener('show.bs.modal', onUpdOrderModalShow);
 };
 
 // Дожидаемся загрузки страницы, перед тем как что-то делать
